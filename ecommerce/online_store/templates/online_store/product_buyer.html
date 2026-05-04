@@ -10,8 +10,8 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}">
+            {% if product.images %}
+                <img src="{{ product.images.first.image.url }}" class="card-img-top" alt="{{ product.product_name }}">
             {% else %}
                 <img src="{% static 'img/default-product.png' %}" class="card-img-top" alt="Default image">
             {% endif %}

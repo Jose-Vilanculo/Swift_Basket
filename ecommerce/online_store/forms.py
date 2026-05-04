@@ -1,6 +1,10 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from .models import Store, Product, User
+from .models import Store, Product
+
+
+User = get_user_model()
 
 
 class StoreForm(forms.ModelForm):
@@ -10,7 +14,7 @@ class StoreForm(forms.ModelForm):
     """
     class Meta:
         model = Store
-        fields = ["store_name", "description"]
+        fields = ["store_name", "description", "store_image"]
 
 
 class ProductForm(forms.ModelForm):
@@ -21,7 +25,7 @@ class ProductForm(forms.ModelForm):
     """
     class Meta:
         model = Product
-        fields = ["product_name", "price", "description", "image"]
+        fields = ["product_name", "price", "description", "brand", "stock"]
 
 
 class RegisterUserForm(UserCreationForm):

@@ -1,5 +1,6 @@
 import secrets
-from online_store.models import User, ResetToken
+from online_store.models import ResetToken
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from datetime import datetime, timedelta
@@ -7,7 +8,10 @@ from django.shortcuts import render, redirect
 from hashlib import sha1
 
 
+User = get_user_model()
+
 # ---email---
+
 
 def build_email(user, reset_url):
     """

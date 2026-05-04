@@ -1,7 +1,52 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, Group
+from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 from django.conf import settings
 import uuid
+
+
+class CustomUser(AbstractUser):
+    """
+    Custom user model extending Django's AbstractUser.
+
+    Fields:
+        - role: Defines the user's role ('buyer' or 'vendor')
+        - profile_image: profile picture and background images,
+          for users profiles
+
+    Methods:
+        - is_buyer(): Returns True if user is a buyer
+        - is_vendor(): Returns True if user is a vendor
+        - save(): Overrides save to enforce assigning a group
+        - assign_group(): Automatically assigns user to group based on role
+    """
+    ROLE_CHOICES = (
+        ('buyer', 'Buyer'),
+        ('vendor', 'Vendor'),
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    profile_image = models.ImageField(
+        upload_to="profile_images/",
+        null=True,
+        blank=True
+    )
+
+    def is_buyer(self):
+        return self.role == 'buyer'
+
+    def is_vendor(self):
+        return self.role == 'vendor'
+
+    def assign_group(self):
+        if self.role:
+            group, _ = Group.objects.get_or_create(name=self.role.capitalize())
+            self.groups.clear()
+            self.groups.add(group)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.assign_group()
 
 
 class Store(models.Model):
@@ -12,22 +57,33 @@ class Store(models.Model):
         - owner: OneToOneField linked to a user
         - store_name: CharField for the store's name
         - description: TextField for the store's description
+        -store_image: ImageField to store a stores profile image
 
     Returns:
         _str_: name of the store
     """
     store_id = models.UUIDField(primary_key=True,
                                 default=uuid.uuid4,
-                                editable=False) 
-    owner = models.OneToOneField(User,
+                                editable=False)
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL,
                                  on_delete=models.CASCADE,
                                  related_name="store"
                                  )
     store_name = models.CharField(max_length=255)
     description = models.TextField()
+    store_image = models.ImageField(
+        upload_to="store_images/",
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.store_name
+
+    def save(self, *args, **kwargs):
+        if self.owner.role != "vendor":
+            raise ValidationError("Only vendors can own Stores")
+        super().save(*args, **kwargs)
 
 
 class Product(models.Model):
@@ -55,20 +111,125 @@ class Product(models.Model):
         editable=False
     )
     product_name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, blank=True)
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2
     )
-    image = models.ImageField(
-        upload_to="product_images/",
-        default="product_images/default.webp",
-        null=True,
-        blank=True
-    )
     description = models.TextField()
+    category = models.ForeignKey(
+        "Category",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="products"
+    )
+    brand = models.CharField(max_length=255, blank=True, null=True)
+    stock = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.product_name) or "product"
+            slug = base_slug
+            counter = 1
+
+            while (
+                Product.objects
+                .filter(slug=slug)
+                .exclude(pk=self.pk)
+                .exists()
+            ):
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.product_name
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["category"]),
+            models.Index(fields=["slug"]),
+        ]
+
+    @property
+    def is_available(self):
+        return self.stock > 0   # returns boolean according to stock
+
+
+class Category(models.Model):
+    """Model that defines a products category
+
+    Args:
+        - name: Charfield for the name of the category
+        -parent: the parent category if the object is a sub category
+
+    Returns:
+        __str: name of the category
+    """
+    name = models.CharField(max_length=255)
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="subcategories"
+    )
+    slug = models.SlugField(unique=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name) or "category"
+            slug = base_slug
+            counter = 1
+
+            while (
+                Category.objects
+                .filter(slug=slug)
+                .exclude(pk=self.pk)
+                .exists()
+            ):
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["slug"]),
+            models.Index(fields=["parent"]),
+        ]
+
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(
+        "Product",
+        on_delete=models.CASCADE, related_name="variants"
+    )
+    name = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="images"
+    )
+    image = models.ImageField(upload_to="product_images/")
+
+    def __str__(self):
+        return f"Image for {self.product.product_name}"
 
 
 class Cart(models.Model):
@@ -79,7 +240,11 @@ class Cart(models.Model):
         user (User): The user who owns the cart.
         date_created_at (datetime): Timestamp when the cart was created.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="cart"
+    )
     date_created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -100,15 +265,15 @@ class CartItem(models.Model):
                              null=False,
                              blank=False
                              )
-    items = models.ForeignKey("Product",
-                              on_delete=models.CASCADE,
-                              null=False,
-                              blank=False
-                              )
+    product = models.ForeignKey("Product",
+                                on_delete=models.CASCADE,
+                                null=False,
+                                blank=False
+                                )
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} x {self.items.product_name}"
+        return f"{self.quantity} x {self.product.product_name}"
 
 
 class Review(models.Model):
@@ -124,15 +289,13 @@ class Review(models.Model):
         is_verified (bool): Whether the purchase is verified.
     """
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         related_name="reviews",
         on_delete=models.CASCADE
     )
     product = models.ForeignKey(
         "Product",
         on_delete=models.CASCADE,
-        null=True,
-        blank=True
     )
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
     comment = models.TextField()
@@ -160,15 +323,15 @@ class Order(models.Model):
         total_price (Decimal): Total cost of the order.
         date_created_at (datetime): Time the order was created.
     """
-    user = models.ForeignKey(User,
-                             related_name="order",
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name="orders",
                              on_delete=models.CASCADE
                              )
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     date_created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Oder #{self.id} by {self.user}"
+        return f"Order #{self.id} by {self.user}"
 
 
 class OrderItem(models.Model):
@@ -182,14 +345,14 @@ class OrderItem(models.Model):
         price (Decimal): Price for the ordered quantity.
     """
     order = models.ForeignKey("Order",
-                              related_name="order_item",
+                              related_name="order_items",
                               on_delete=models.CASCADE)
     product = models.CharField(max_length=255)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.product_name}"
+        return f"{self.quantity} x {self.product}"
 
 
 class ResetToken(models.Model):
