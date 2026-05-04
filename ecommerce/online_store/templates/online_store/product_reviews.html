@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load group_filters %}
+{% block title %}Product Reviews{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Reviews for {{ product }}</h2>
+
+{% if messages %}
+  <div class="message-container">
+    {% for message in messages %}
+      <div class="message-box message-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if reviews %}
+  <div class="list-group mb-4">
+    {% for review in reviews %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <strong>{{ review.user.email }}</strong>
+          <span class="text-muted">{{ review.rating }} ⭐</span>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+          {% if review.is_verified %}
+            <small class="text-success">Verified Purchase</small>
+          {% else %}
+            <small class="text-muted">Unverified</small>
+          {% endif %}
+          <small class="text-muted">{{ review.date_created_at|date:"M d, Y H:i" }}</small>  <!-- ✅ Add this line -->
+        </div>
+
+        <p class="mb-0 mt-2">{{ review.comment }}</p>
+      </div>
+    {% endfor %}
+
+  </div>
+{% else %}
+  <p>No reviews yet.</p>
+{% endif %}
+
+
+{% if user|has_group:"Buyers" %}
+  <a href="{% url 'create_review' product.pk %}" class="btn btn-outline-primary">Leave a Review</a>
+{% endif %}
+
+  {% endblock %}

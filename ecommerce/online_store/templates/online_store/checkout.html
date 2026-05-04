@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Checkout</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+        <tr>
+          <td>{{ item.items }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>R {{ item.items.price }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="table-light">
+          <td colspan="2" class="text-end"><strong>Total:</strong></td>
+          <td><strong>R {{ total_price }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary">Place Order</button>
+  </div>
+</form>
+{% endblock %}

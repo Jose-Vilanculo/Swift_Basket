@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} - SwiftBasket{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 fw-bold text-dark">Your Vendor Dashboard</h2>
+<div class="alert alert-info d-flex align-items-center" role="alert">
+  <i class="bi bi-shop me-2"></i>
+  Welcome back, {{ request.user.first_name }}! Here's an overview of your store.
+</div>
+
+
+<!-- Store Info -->
+{% if store %}
+    <div class="mb-4 d-flex align-items-center justify-content-between">
+        <div>
+            <h4>Your Store: {{ store.store_name }}</h4>
+            <p>- {{ store.description }}</p>
+        </div>
+        <div>
+            <a href="{% url 'update_store' store.pk %}" class="btn btn-outline-secondary me-2">Edit Store</a>
+            <a href="{% url 'delete_store' store.pk %}" class="btn btn-outline-danger"
+            onclick="return confirm('Are you sure you want to delete your store? This cannot be undone.');">
+            Delete Store
+            </a>
+        </div>
+    </div>
+
+    <!-- Products -->
+    <h5 class="fw-semibold">Your Products</h5>
+    {% if products %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mb-4">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-primary">{{ product.product_name }}</h5>
+                            <p class="card-text text-muted small">{{ product.description|truncatechars:100 }}</p>
+                            <p class="card-text mb-2"><strong>Price:</strong> R{{ product.price }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'view_product' product.pk %}" class="btn btn-sm btn-outline-primary w-100">Manage</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No products yet. <a href="{% url 'create_product' %}">Add one now.</a></p>
+    {% endif %}
+
+    <!-- Add Product Button -->
+    <a href="{% url 'create_product' %}" class="btn btn-success">Add New Product</a>
+{% else %}
+    <p>You don't have a store yet. <a href="{% url 'create_store' %}" class="btn btn-primary">Create Store</a></p>
+{% endif %}
+{% endblock %}

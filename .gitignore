@@ -1,0 +1,118 @@
+# ====================================
+# OS-Specific
+# ====================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+__MACOSX/
+
+# ====================================
+# Environment Files
+# ====================================
+.env
+.env.*
+*.env
+*.env.*
+
+# ====================================
+# Python
+# ====================================
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual Environments
+env/
+venv/
+ENV/
+.venv/
+.Python
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# pyenv
+.python-version
+
+# ====================================
+# Django
+# ====================================
+
+# SQLite database
+*.sqlite3
+db.sqlite3
+
+# Django migration files
+**/migrations/
+**/migrations/*.pyc
+**/migrations/__pycache__/
+
+# Local media & static files
+/media/
+/static/
+/staticfiles/
+/static_root/
+/media_root/
+
+# Collected static files
+collected_static/
+
+# ====================================
+# Logs
+# ====================================
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# ====================================
+# Editors / IDEs
+# ====================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Eclipse
+.project
+.pydevproject
+
+# ====================================
+# Miscellaneous
+# ====================================
+*.swp
+*.bak
+*.tmp
+*.orig
+*.lock
+*.coveragerc
+coverage.xml
+htmlcov/
+
+# ====================================
+# System
+# ====================================
+desktop.ini
+*.lnk
+
+
+# ====================================
+# Twitter authentication tokens
+# ====================================
+ecommerce/twitter_token.json

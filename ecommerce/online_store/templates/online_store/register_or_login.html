@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Become a Vendor - SwiftBasket{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Sell on SwiftBasket</h1>
+    <p class="mb-4">Already have an account? Log in. If not, register and start selling today!</p>
+
+    <a href="{% url 'login_vendor' %}" class="btn btn-outline-primary btn-lg me-3">Log In</a>
+    <a href="{% url 'register_vendor' %}" class="btn btn-primary btn-lg">Register as a Vendor</a>
+</div>
+{% endblock %}

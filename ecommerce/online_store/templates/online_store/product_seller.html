@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}{{ product.product_name }} - SwiftBasket{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}">
+            {% else %}
+                <img src="{% static 'img/default-product.png' %}" class="card-img-top" alt="Default image">
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">{{ product.product_name }}</h3>
+                <p class="card-text"><strong>Price:</strong> R{{ product.price }}</p>
+                <p class="card-text"><strong>Product ID:</strong> {{ product.product_id }}</p>
+                <p class="card-text d-flex align-items-center">
+                    <strong class="me-2">Rating:</strong>
+                    <small class="text-muted">
+                        {% with avg=product.avg_rating %}
+                        {% if avg %}
+                            <a href="{% url 'product_reviews_view' product.pk %}">
+                                {% for i in "12345" %}
+                                {% if forloop.counter <= avg|floatformat:0 %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                                {% endfor %}
+                                ({{ avg|floatformat:1 }}/5)
+                            </a>
+                        {% else %}
+                            No ratings yet
+                        {% endif %}
+                        {% endwith %}
+                    </small>
+                </p>
+
+            
+
+                <p class="card-text"><strong>Description:</strong> {{ product.description }}</p>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'update_product' product.pk %}" class="btn btn-outline-primary">Edit</a>
+                    <a href="{% url 'delete_product' product.pk %}" class="btn btn-outline-danger"
+                    onclick="return confirm('Are you sure you want to delete this product? This cannot be undone.');">
+                    Delete
+                    </a>
+                    <a href="{% url 'seller_home' %}" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
