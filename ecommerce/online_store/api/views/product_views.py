@@ -17,16 +17,16 @@ class ProductViewSet(viewsets.ModelViewSet):
         """
         Optomize database query
         """
+
         queryset = (
             Product.objects
             .select_related("category", "store")
             .prefetch_related("images")
         )
 
-        category__slug = self.request.query_params.get("category")
-
 
         # get category by slug
+        category__slug = self.request.query_params.get("category")
         if category__slug:
             queryset = queryset.filter(category__slug=category__slug)
 
