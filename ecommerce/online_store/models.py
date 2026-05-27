@@ -14,6 +14,8 @@ class CustomUser(AbstractUser):
         - role: Defines the user's role ('buyer' or 'vendor')
         - profile_image: profile picture and background images,
           for users profiles
+        - phone_number: users telephone number
+        - gender: Defines the users Gender ('male', 'female' or 'other')
 
     Methods:
         - is_buyer(): Returns True if user is a buyer
@@ -31,6 +33,13 @@ class CustomUser(AbstractUser):
         null=True,
         blank=True
     )
+    phone_number = models.CharField(max_length=20, blank=True)
+    GENDER_CHOICES = (
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    )
+    gender = models.CharField(max_length=20, choices=GENDER_CHOICES)
 
     def is_buyer(self):
         return self.role == 'buyer'
@@ -47,6 +56,33 @@ class CustomUser(AbstractUser):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.assign_group()
+
+
+class Address(models.Model):
+    """Model that defines a users address
+
+    Args:
+        models (_type_): _description_
+
+    Raises:
+        ValidationError: _description_
+
+    Returns:
+        _type_: _description_
+    """
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="address"
+    )
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    province = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    country = models.CharField(max_length=100, default="South Africa")
+    
+    def __str__(self):
+        return f"{self.user.name} - {self.street}"
 
 
 class Store(models.Model):
@@ -73,6 +109,11 @@ class Store(models.Model):
     description = models.TextField()
     store_image = models.ImageField(
         upload_to="store_images/",
+        null=True,
+        blank=True
+    )
+    store_banner = models.ImageField(
+        upload_to="store_banners/",
         null=True,
         blank=True
     )
@@ -123,8 +164,7 @@ class Product(models.Model):
         null=True,
         related_name="products"
     )
-    brand = models.CharField(max_length=255, blank=True, null=True)
-    stock = models.PositiveIntegerField(default=0)
+    brand = models.CharField(max_length=255, default="generic")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -172,7 +212,7 @@ class Category(models.Model):
     Returns:
         __str: name of the category
     """
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     parent = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
@@ -181,11 +221,17 @@ class Category(models.Model):
         related_name="subcategories"
     )
     slug = models.SlugField(unique=True, blank=True)
+    icon = models.ImageField(
+        upload_to="category_icons/",
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
+
         if not self.slug:
             base_slug = slugify(self.name) or "category"
             slug = base_slug
@@ -202,6 +248,9 @@ class Category(models.Model):
 
             self.slug = slug
 
+        # normalize to prevent duplicates
+        self.name = self.name.strip().title()
+
         super().save(*args, **kwargs)
 
     class Meta:
@@ -216,8 +265,20 @@ class ProductVariant(models.Model):
         "Product",
         on_delete=models.CASCADE, related_name="variants"
     )
-    name = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
+    attributes = models.JSONField(default=dict)
+    stock = models.PositiveIntegerField(default=0, blank=False, null=False)
+    additional_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+
+    @property
+    def final_price(self):
+        return (
+            self.product.price + self.additional_price
+        )
 
 
 class ProductImage(models.Model):
@@ -227,9 +288,25 @@ class ProductImage(models.Model):
         related_name="images"
     )
     image = models.ImageField(upload_to="product_images/")
+    is_main = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+
+        # updates is_main from previous to the current image
+        if self.is_main:
+            ProductImage.objects.filter(
+                product=self.product,
+                is_main=True
+            ).exclude(pk=self.pk).update(is_main=False)
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Image for {self.product.product_name}"
+    
+    @property
+    def main_image(self):
+        return self.images.filter(is_main=True).first()
 
 
 class Cart(models.Model):
@@ -265,7 +342,7 @@ class CartItem(models.Model):
                              null=False,
                              blank=False
                              )
-    product = models.ForeignKey("Product",
+    product_variant = models.ForeignKey("ProductVariant",
                                 on_delete=models.CASCADE,
                                 null=False,
                                 blank=False
@@ -273,7 +350,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.product_name}"
+        return f"{self.quantity} x {self.product_variant.product.product_name}"
 
 
 class Review(models.Model):
@@ -296,8 +373,10 @@ class Review(models.Model):
     product = models.ForeignKey(
         "Product",
         on_delete=models.CASCADE,
+        related_name="review",
     )
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    title=models.CharField(max_length=255)
     comment = models.TextField()
     date_created_at = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
@@ -323,11 +402,25 @@ class Order(models.Model):
         total_price (Decimal): Total cost of the order.
         date_created_at (datetime): Time the order was created.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             related_name="orders",
-                             on_delete=models.CASCADE
-                             )
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="orders",
+        on_delete=models.CASCADE
+    )
+    shipping_full_name = models.CharField(max_length=255)
+    shipping_phone = models.CharField(max_length=20)
+    shipping_street = models.CharField(max_length=255)
+    shipping_city = models.CharField(max_length=100)
+    shipping_province = models.CharField(max_length=100)
+    shipping_postal_code = models.CharField(max_length=10)
+    shipping_country = models.CharField(
+        max_length=100,
+        default="South Africa"
+    )
+    total_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
     date_created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -347,12 +440,15 @@ class OrderItem(models.Model):
     order = models.ForeignKey("Order",
                               related_name="order_items",
                               on_delete=models.CASCADE)
-    product = models.CharField(max_length=255)
+    product_variant = models.ForeignKey(
+        ProductVariant,
+        on_delete=models.CASCADE
+    )
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product}"
+        return f"{self.quantity} x {self.product_variant}"
 
 
 class ResetToken(models.Model):

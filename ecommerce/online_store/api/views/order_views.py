@@ -1,0 +1,65 @@
+from rest_framework import viewsets, serializers
+from online_store.models import CartItem, Cart, OrderItem, Order, Address
+from online_store.api.serializers import OrderSerializer
+from online_store.api.permissions import IsBuyer
+
+
+
+class OrderViewset(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    permission_classes = [IsBuyer]
+    http_method_names = ["get", "post"]
+
+    def perform_create(self, serializer):
+        # get cart items
+        cart = Cart.objects.get(user=self.request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+
+        # dont allow orders without any cart items
+        if not cart_items.exists():
+            raise serializers.ValidationError(
+                "You cannot make an order with no items in your cart."
+            )
+
+        # get total price from cart items
+        total_price = 0
+        for items in cart_items:
+            total_price += items.product_variant.final_price * items.quantity
+
+
+        #get user address
+        try:
+            address = Address.objects.get(
+                user=self.request.user
+            )
+
+        except Address.DoesNotExist():
+            raise serializers.ValidationError(
+                "User must have a valid address to place an order"
+            )
+
+        # create order
+        order = serializer.save(
+            user=self.request.user,
+            total_price=total_price,
+            address=address
+        )
+
+        # create order items
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product_variant=item.product_variant,
+                quantity=item.quantity,
+                price=item.product_variant.final_price
+            )
+
+        # delete cart items
+        cart_items.delete()
+    
+    def get_queryset(self):
+
+        # Give each user their own orders
+        return Order.objects.filter(
+            user=self.request.user
+        )

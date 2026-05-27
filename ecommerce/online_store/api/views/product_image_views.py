@@ -1,13 +1,13 @@
 from rest_framework import viewsets
 from online_store.models import ProductImage
-from rest_framework.permissions import IsAuthenticated
 from online_store.api.serializers import ProductImageSerializer
+from online_store.api.permissions import IsOwnerVendorOrReadOnly
 
 
 class ProductImageViewSet(viewsets.ModelViewSet):
     serializer_class = ProductImageSerializer
     queryset = ProductImage.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerVendorOrReadOnly]
     http_method_names = ["get", "post", "patch", "delete"]
 
     def perform_create(self, serializer):
