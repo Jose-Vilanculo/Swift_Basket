@@ -1,0 +1,559 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+.category-section{
+    min-height: 100vh;
+    width: 100vw;
+    margin-top: 100px;
+}
+
+.category-section h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: large;
+    color: black;
+}
+
+.heading{
+    width: calc(70vw + 15px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ----- First Container ----- */
+.container{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
+}
+
+.text{
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 70px;
+    font-family: 'Montserrat', sans-serif;
+
+    line-height: 45px;
+}
+
+.text h2{
+    font-size: 1.5rem;
+    color: white;
+    font-weight: 800;
+    margin: 0;
+}
+
+.text h1{
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 5px 0;
+}
+
+.sports-deals{
+    position: relative;
+    width: 45vw;
+    height: 25vw;
+}
+
+.img-overlay{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    cursor: pointer;
+}
+
+.img-overlay a{
+    position: absolute;
+    margin-left: 70px;
+    bottom: 10%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+}
+
+.image{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.right-container{
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    height: 25vw;
+    gap: 15px;
+}
+
+.text-2{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+
+    margin-right: 30px;
+    margin-left: auto;
+    font-family: 'Montserrat', sans-serif;
+
+    line-height: 25px;
+}
+
+.text-2 h2{
+    font-size: 1rem;
+    color: white;
+    font-weight: 800;
+    margin: 0;
+}
+
+.text-2 h1{
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 5px 0;
+}
+
+.text-2 a {
+    margin: 0;
+    cursor: pointer;
+}
+
+.gym-equipment{
+    position: relative;
+    background-color: purple;
+    width: 100%;
+    height: calc(50% - 7.5px);
+}
+
+.text-3{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    margin-right: auto;
+    margin-left: 30px;
+    font-family: 'Montserrat', sans-serif;
+
+    line-height: 25px;
+}
+
+.text-3 h2{
+    font-size: 1rem;
+    color: white;
+    font-weight: 800;
+    margin: 0;
+}
+
+.text-3 h1{
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 5px 0;
+}
+
+.text-3 a {
+    margin: 0;
+    cursor: pointer;
+}
+
+.tech-deals{
+    position: relative;
+    width: 100%;
+    height: calc(50% - 7.5px)
+}
+
+/* ----- Second Container ----- */
+.second-container{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 50px;
+    align-items: center;
+}
+
+.home-living{
+    position: relative;
+    width: calc(70vw + 15px);
+    height: 18vw;
+}
+
+.home-living .img-overlay{
+    justify-content: start;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.home-living .text {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.home-living h2{
+    font-size: 2rem;
+    margin: 20px auto 0;
+}
+
+.home-living h3{
+    font-size: 1.9rem;
+    margin: -10px auto;
+}
+
+.home-living h4{
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0 auto;
+}
+
+.home-living a{
+    right: 5%;
+}
+
+.bottom-container{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 100px;
+    width: calc(70vw + 15px);
+    height: 25vw;
+    gap: 15px;
+}
+
+.bottom-container .img-overlay{
+    justify-content: start;
+    align-items: flex-end;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.bottom-container .text{
+    margin: 60px 40px;
+}
+
+.bottom-container h2{
+    font-size: 2rem;
+    line-height: 2.5rem;
+}
+
+.bottom-container h1{
+    font-size: 3.5rem;
+
+}
+
+.bottom-container a {
+    position: relative;
+    margin: 30px 0 0 0;
+
+}
+
+.mens-fashion{
+    position: relative;
+    width: 35vw;
+    height: 25vw;
+}
+
+.womens-fashion{
+    position: relative;
+    width: 35vw;
+    height: 25vw;
+}
+
+/* --- Media Queries --- */
+
+/* Fonts */
+@media screen and (max-width: 600px) {
+
+    /* Collapse Containers */
+    .category-section {
+        margin-top: 70px;
+    }
+    .heading {
+        width: calc(85vw + 15px);
+    }
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .right-container {
+        align-items: center;
+        height: calc(60vw + 30px);
+    }
+    
+    .sports-deals {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+
+    .gym-equipment {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+    .tech-deals {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+
+    .home-living {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+    .bottom-container {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+    .mens-fashion {
+        width: 42.5vw;
+        height: calc(30vw + 15px);
+    }
+    .womens-fashion {
+        width: 42.5vw;
+        height: calc(30vw + 15px);
+    }
+
+
+    /*Sports Deals Container*/
+    .container .text {
+        line-height: 20px;
+        margin-left: 12px;
+    }
+    .text h2 {
+        font-size: 0.9rem;
+    }
+    .text h1 {
+        font-size: 1.8rem;
+        margin: 0;
+    }
+    .sports-deals a {
+        margin-left: 12px;
+    }
+    .sports-deals .image {
+        object-position: 50% 15%;
+    }
+
+    .img-overlay a {
+        font-size: 0.6rem;
+    }
+
+    /*Gym Equipment Container*/
+    .text-2 {
+        line-height: 15px;
+        margin-right: 18px;
+    }
+    .text-2 h2 {
+        font-size: 0.8rem;
+    }
+    .text-2 h1 {
+        font-size: 1.2rem;
+    }
+
+    /*Tech Deals Container*/
+    .text-3 {
+        line-height: 15px;
+        margin-left: 12px;
+    }
+    .text-3 h2 {
+        font-size: 0.8rem;
+    }
+    .text-3 h1 {
+        font-size: 1.2rem;
+    }
+
+    /* Living Space Container*/
+    .home-living .text {
+        line-height: 35px;
+        margin-top: -15px;
+    }
+    .home-living h2 {
+        font-size: 1.3rem;
+    }
+    .home-living h3 {
+        font-size: 1.2rem;
+    }
+    .home-living h4 {
+        font-size: 0.8rem;
+    }
+
+    /*Fashion*/
+    .bottom-container .text{
+        margin: auto 10px auto auto;
+        display: flex;
+        justify-content: flex-end;
+        line-height: 2rem;
+    }
+    .bottom-container h2 {
+        font-size: 0.8rem;
+        line-height: 1rem;
+    }
+    .bottom-container h1 {
+        font-size: 1.2rem;
+    }
+    .bottom-container a{
+        margin-top: 5px;
+        font-size: 0.6rem;
+    }
+
+}
+
+
+/* Mobile Containers*/
+@media screen and (min-width: 601px) and (max-width: 900px) {
+    .category-section {
+        margin-top: 70px;
+    }
+    .heading {
+        width: calc(85vw + 15px);
+    }
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .sports-deals .image {
+        object-position: 50% 15%;
+    }
+    .text {
+        margin-left: 30px;
+        line-height: 30px;
+    }
+    .img-overlay a {
+        margin-left: 30px;
+    }
+    .right-container {
+        align-items: center;
+        height: calc(60vw + 30px);
+    }
+    
+    .sports-deals {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+    .text-3 a {
+        margin-left: 0px;
+    }
+
+    .gym-equipment {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+    .tech-deals {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+
+    .home-living {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+    .home-living .text {
+        line-height: 35px;
+        margin-top: -15px;
+    }
+    .home-living h2 {
+        font-size: 1.3rem;
+    }
+    .home-living h3 {
+        font-size: 1.2rem;
+    }
+    .home-living h4 {
+        font-size: 0.9rem;
+    }
+
+    .bottom-container {
+        width: calc(85vw + 15px);
+        height: calc(30vw + 15px);
+    }
+    .bottom-container .text {
+        margin: auto 10px auto 0;
+    }
+    .bottom-container h2 {
+        font-size: 1.2rem;
+    }
+    .bottom-container h1 {
+        font-size: 2.5rem;
+    }
+    .bottom-container a {
+        margin-left: 0px;
+    }
+    .mens-fashion {
+        width: 42.5vw;
+        height: calc(30vw + 15px);
+    }
+    .womens-fashion {
+        width: 42.5vw;
+        height: calc(30vw + 15px);
+    }
+}
+
+
+/* Containers */
+@media screen and (min-width: 901px) and (max-width: 1150px) {
+
+    /*Sports Deals Container*/
+    .text {
+        line-height: 25px;
+        margin-left: 40px;
+    }
+    .text h2 {
+        font-size: 1.2rem;
+    }
+    .text h1 {
+        font-size: 2rem;
+        margin: 0;
+    }
+    .img-overlay a {
+        margin-left: 40px;
+        font-size: 0.8rem;
+    }
+
+    /*Gym Equipment Container*/
+    .text-2 {
+        line-height: 15px;
+        margin-right: 18px;
+    }
+    .text-2 h2 {
+        font-size: 0.8rem;
+    }
+    .text-2 h1 {
+        font-size: 1.2rem;
+    }
+
+    /*Tech Deals Container*/
+    .text-3 {
+        line-height: 15px;
+        margin-left: 12px;
+    }
+    .text-3 h2 {
+        font-size: 0.8rem;
+    }
+    .text-3 h1 {
+        font-size: 1.2rem;
+    }
+     .text-3 a {
+        margin: 0;
+        font-size: 0.8rem;
+        
+    }
+
+    /* Living Space Container*/
+    .home-living .text {
+        line-height: 35px;
+        margin-top: -15px;
+    }
+    .home-living h2 {
+        font-size: 1.3rem;
+    }
+    .home-living h3 {
+        font-size: 1.2rem;
+    }
+    .home-living h4 {
+        font-size: 0.8rem;
+    }
+
+    /*Fashion*/
+    .bottom-container .text{
+        margin: auto 45px auto auto;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .bottom-container a{
+        margin: 40px 0 0;
+        font-size: 0.8rem;
+    }
+
+}

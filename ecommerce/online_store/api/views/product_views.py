@@ -1,6 +1,6 @@
 from rest_framework import viewsets, serializers
 from django.db.models import Q
-from online_store.models import Product, ProductImage
+from online_store.models import Product, ProductImage, Category
 from online_store.api.serializers import ProductSerializer
 from online_store.api.permissions import IsOwnerVendorOrReadOnly
 
@@ -69,10 +69,24 @@ class ProductViewSet(viewsets.ModelViewSet):
                 Q(brand__icontains=search)
             )
 
-        # get category by slug
+        # get category by slug and subcategories if present
         category__slug = self.request.query_params.get("category")
         if category__slug:
-            queryset = queryset.filter(category__slug=category__slug)
+            category = Category.objects.prefetch_related(
+                "subcategories"
+            ).get(slug=category__slug)
+
+            category_ids = [category.id]
+            category_ids.extend(
+                category.subcategories.values_list(
+                    "id",
+                    flat=True
+                )
+            )
+
+            queryset = queryset.filter(
+                category_id__in=category_ids
+            )
 
 
         # get items according to an order

@@ -51,6 +51,27 @@ class IsOwnerVendorOrReadOnly(BasePermission):
 
         # Allow only store owners to edit or delete products
         return request.user == obj.store.owner
+    
+class IsProductVariantOwnerVendorOrReadOnly(BasePermission):
+    """
+        - Anyone can read (GET)
+        - Only vendor owners can edit/delete their own products
+    """
+    def has_permission(self, request, view):
+
+        if request.method in SAFE_METHODS:
+            return True
+
+        # Allow authenticated vendors write permissions
+        return request.user.is_authenticated and request.user.is_vendor()
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in SAFE_METHODS:
+            return True
+
+        # Allow only store owners to edit or delete products
+        return request.user == obj.product.store.owner
 
 
 class IsOwnerBuyerOrReadOnly(BasePermission):

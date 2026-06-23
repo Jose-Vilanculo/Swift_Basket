@@ -1,0 +1,33 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  overflow-x: clip;
+
+  color: rgba(255, 255, 255, 0.87);
+  scroll-behavior: smooth;
+  --primary-color: rgba(255, 153, 51, 1);
+}
+
+html, body {
+  overflow-x: clip;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  display: block;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+

@@ -27,6 +27,11 @@ class CustomUser(AbstractUser):
         ('buyer', 'Buyer'),
         ('vendor', 'Vendor'),
     )
+    email = models.EmailField(
+        unique=True,
+        blank=False,
+        null=False
+    )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     profile_image = models.ImageField(
         upload_to="profile_images/",

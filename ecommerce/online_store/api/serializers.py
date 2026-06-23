@@ -60,7 +60,8 @@ class UserSerializer(serializers.ModelSerializer):
         protected_fields = [
             "username",
             "role",
-            "gender"
+            "gender",
+            "email"
         ]
 
         for field in protected_fields:
@@ -76,6 +77,13 @@ class UserSerializer(serializers.ModelSerializer):
                 
         return super().update(instance, validated_data)
 
+
+    def validate_email(self, value):
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "An account with this email already exists."
+            )
+        return value
 
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -114,6 +122,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
+
+    final_price = serializers.SerializerMethodField()
+
+    def get_final_price(self, obj):
+        return obj.final_price
 
     class Meta:
         model = ProductVariant
@@ -215,6 +228,8 @@ class CartItemSerializer(serializers.ModelSerializer):
         source="product_variant.product",
         read_only=True
     )
+    unit_price = serializers.SerializerMethodField()
+    line_price = serializers.SerializerMethodField()
 
     def update(self, instance, validated_data):
 
@@ -230,6 +245,17 @@ class CartItemSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+    
+
+    def get_unit_price(self, obj):
+        return obj.product_variant.final_price
+    
+
+    def get_line_price(self, obj):
+        final_price = obj.product_variant.final_price
+        quantity = obj.quantity
+        return final_price * quantity
+    
 
     class Meta:
         model = CartItem
@@ -238,6 +264,22 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+
+    subtotal = serializers.SerializerMethodField()
+    total_products = serializers.SerializerMethodField()
+    cartitem_set = CartItemSerializer(many=True)
+
+    def get_subtotal(self, obj):
+        return sum(
+            item.product_variant.final_price * item.quantity
+            for item in obj.cartitem_set.all()
+        )
+    
+    def get_total_products(self, obj):
+        return sum(
+            item.quantity
+            for item in obj.cartitem_set.all()
+        )
 
     class Meta:
         model = Cart
