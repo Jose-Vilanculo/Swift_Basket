@@ -1,0 +1,278 @@
+.hero {
+    position: relative;
+    height: 100vh;
+    background:
+        radial-gradient(
+            circle at 30% 40%,
+            #b2c6d8 0%,
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #879db0 0%,
+            #46586b 100%
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+    overflow: hidden;
+}
+
+.content {
+    width: 50vw;
+    z-index: 2;
+    margin-left: 150px;
+    padding-top: 35px;
+}
+
+.content h2 {
+    color: white;
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.content h1 {
+    color: white;
+    font-size: 5rem;
+    line-height: 1;
+    margin: -0.5rem 0 -0.5rem;
+    font-weight: 700;
+    letter-spacing: -4px;
+}
+
+.content p {
+    color: white;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    margin-bottom: 2.5rem;
+    margin-right: 150px;
+}
+
+.content a {
+    position: relative;
+    background: black;
+    color: white;
+    width: fit-content;
+
+    border: 2px solid white;
+    border-radius: 0;
+
+    padding: 0.7rem 2.5rem 0.8rem;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.imageSection {
+    position: relative;
+
+    width: 50vw;
+    height: 50vw;
+
+    margin-bottom: 0;
+    margin-top: auto;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+}
+
+.circle {
+    position: absolute;
+    width: 75vh;
+    height: 75vh;
+
+    left: 42%;
+    top:38%;
+
+    border-radius: 50%;
+
+    background: rgb(0, 0, 0);
+    border: 8px solid white;
+}
+
+.shopper {
+    position: absolute;
+
+    bottom: 0%;
+    left: 63%;
+
+    transform: translateX(-50%);
+
+    height: 70%;
+    object-fit: contain;
+}
+
+.cornerShape {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 0;
+    height: 0;
+
+    border-left: 0 solid transparent;
+    border-right: 120px solid transparent;
+    border-top: 200px solid black;
+
+    transform: rotateX(180deg);
+}
+
+/* ----- Media Queries ----- */
+
+/* mobile phones*/
+
+@media screen and (max-width: 550px) {
+        /* improve content spacing */
+
+    .hero {
+        flex-direction: column;
+    }
+
+    .content {
+        position: relative;
+        top: 25%;
+        width: fit-content;
+        margin: 0 30px 0;
+        padding-top: 0;
+    }
+
+    .imageSection {
+        margin: auto 0 0 auto;
+    }
+
+    .circle {
+        left: -11%;
+        top: -11%;
+    }
+
+    .shopper {
+        display: none;
+        left: 43%;
+        bottom: 0%;
+        height: 150%;
+    }
+
+    .content h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .content h1 {
+        font-size: 5rem;
+    }
+
+    .content p {
+        margin-right: 0;
+        margin-bottom: -65px;
+        font-size: 1.4rem;
+    }
+
+    .content a {
+        top: 35%;
+    }
+}
+
+/* hero section on smaller screens */
+@media screen and (min-width: 551px) and (max-width: 950px) {
+
+    /* improve content spacing */
+
+    .hero {
+        flex-direction: column;
+    }
+
+    .content {
+        width: fit-content;
+        margin: 150px 50px 0;
+        padding-top: 0;
+    }
+
+    .imageSection {
+        margin: auto 0 0 auto;
+    }
+
+    .circle {
+        left: -15%;
+        top: -20%;
+    }
+
+    .shopper {
+        left: 43%;
+        bottom: 0%;
+        height: 150%;
+    }
+
+    .content h2 {
+        font-size: 3rem;
+    }
+
+    .content h1 {
+        font-size: 6rem;
+    }
+
+    .content p {
+        margin-right: 0;
+        margin-bottom: -50px;
+        font-size: 1.5rem;
+    }
+
+    .content a {
+        top: 40%;
+    }
+}
+
+/* hero section on smaller screens */
+@media screen and (min-width: 951px) and (max-width: 1150px) {
+
+    /* improve content spacing */
+
+    .content {
+        margin-left: 70px;
+    }
+
+    .circle {
+        left: 5%;
+        top: 15%;
+    }
+
+    .shopper {
+        left: 43%;
+        height: 90%;
+    }
+    .content p{
+        margin-right: 0;
+    }
+
+}
+
+/* hero section on smaller screens */
+@media screen and (min-width: 1151px) and (max-width: 1450px) {
+
+    /* improve content spacing */
+    .content {
+        margin-left: 100px;
+    }
+    .content p {
+        margin-right: 0px;
+    }
+
+    .circle {
+        left: 20%;
+        top: 20%;
+    }
+
+    .shopper {
+        height: 90%;
+        left: 50%;
+    }
+}

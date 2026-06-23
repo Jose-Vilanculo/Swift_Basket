@@ -1,13 +1,13 @@
 from rest_framework import viewsets, serializers
 from online_store.models import ProductVariant
 from online_store.api.serializers import ProductVariantSerializer
-from online_store.api.permissions import IsOwnerVendorOrReadOnly
+from online_store.api.permissions import IsProductVariantOwnerVendorOrReadOnly
 
 
 class ProductVariantViewset(viewsets.ModelViewSet):
     serializer_class = ProductVariantSerializer
     queryset = ProductVariant.objects.all()
-    permission_classes = [IsOwnerVendorOrReadOnly]
+    permission_classes = [IsProductVariantOwnerVendorOrReadOnly]
     http_method_names = ["get", "post", "patch", "delete"]
 
     def perform_create(self, serializer):
