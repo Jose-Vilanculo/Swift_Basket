@@ -4,14 +4,22 @@
   font-weight: 400;
   overflow-x: clip;
 
+
   color: rgba(255, 255, 255, 0.87);
   scroll-behavior: smooth;
   --primary-color: rgba(255, 153, 51, 1);
+  }
+
+
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
 }
 
-html, body {
-  overflow-x: clip;
-}
 
 @media (max-width: 768px) {
   html {

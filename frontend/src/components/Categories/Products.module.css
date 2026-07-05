@@ -1,0 +1,240 @@
+.products-section {
+    width: 100%;
+    min-height: 100vh;
+    margin: 100px auto;
+}
+
+
+.title {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    color: #000;
+}
+h2 {
+    color: black;
+    
+}
+
+.container {
+    width: 60%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.product-cards {
+    display: flex;
+    flex-direction: column;
+    color: black;
+    gap: 1px;
+    margin: 0 15px;
+}
+
+.image-container {
+    width: 100%;
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.45s cubic-bezier(.2,.8,.2,1);
+    transform-origin: center;
+}
+
+.product-cards:hover .image-container img {
+    transform: scale(1.06);
+}
+
+.product-cards h4 {
+    font-size: 0.9rem;
+
+    line-height: 1.4rem;
+    max-height: calc(1.4rem * 2);
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+    display: box;
+
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.rating {
+    display: flex;
+    gap: 2px;
+    color: #ffb000;
+}
+
+.no-rating {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: black;
+}
+
+.no-rating p {
+    font-weight: 300 !important;
+    font-size: 0.8rem !important;
+    padding: 3px 7px 0;
+}
+
+.bottom {
+    margin-top: auto;
+}
+
+.product-cards p {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 2px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buttons a {
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 0.2rem 2.5rem 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 200;
+    cursor: pointer;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.buttons a:hover {
+    background: #000;
+    color: #fff;
+}
+
+.buttons button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: black;
+    margin-right: 10px;
+    cursor: pointer;
+    transition:
+        background-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.buttons button:hover {
+    background: #2b2b2b;
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.buttons button:hover .cart-item {
+    right: 3%;
+}
+
+.buttons button:active {
+    transform: scale(0.96);
+}
+
+.cart-item {
+    position: relative;
+    color: white;
+    top: 5%;
+    animation: transform 0.3s ease-in-out;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    margin-top: 3rem;
+}
+
+.pagination button {
+    min-width: 38px;
+    height: 38px;
+    border: 1px solid #d7d7d7;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    border-color: black;
+    color: black;
+}
+
+.pagination button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.active {
+    background: black;
+    color: white;
+    border-color: black;
+}
+
+.pagination span {
+    padding: 0 .5rem;
+    color: #777;
+}
+
+/* ----- Media Queries ----- */
+
+@media screen and (max-width: 650px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 75%;
+    }
+    .title {
+        width: 75%;
+    }
+}
+
+@media screen and (min-width: 651px) and (max-width: 1080px) {
+    .container {
+        width: 80%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 50px;
+    }
+    .title {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 1081px) and (max-width: 1440px) {
+    .container {
+        width: 75%;
+    }
+    .title {
+        width: 75%;
+    }
+    .buttons a {
+        font-size: 0.8rem;
+    }
+}

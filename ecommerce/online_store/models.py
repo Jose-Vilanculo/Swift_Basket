@@ -46,9 +46,10 @@ class CustomUser(AbstractUser):
     )
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES)
 
+    @property
     def is_buyer(self):
         return self.role == 'buyer'
-
+    @property
     def is_vendor(self):
         return self.role == 'vendor'
 
@@ -226,8 +227,17 @@ class Category(models.Model):
         related_name="subcategories"
     )
     slug = models.SlugField(unique=True, blank=True)
+    background_image = models.ImageField(
+        upload_to="background_images/",
+        null=True,
+        blank=True
+    )
     icon = models.ImageField(
         upload_to="category_icons/",
+        null=True,
+        blank=True
+    )
+    description = models.TextField(
         null=True,
         blank=True
     )

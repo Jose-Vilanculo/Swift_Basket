@@ -116,6 +116,8 @@ class CategorySerializer(serializers.ModelSerializer):
             "name",
             "parent",
             "icon",
+            "background_image",
+            "description",
             "slug",
             "subcategories"
         ]
@@ -231,15 +233,67 @@ class CartItemSerializer(serializers.ModelSerializer):
     unit_price = serializers.SerializerMethodField()
     line_price = serializers.SerializerMethodField()
 
+    def validate(self, attrs):
+        product_variant = attrs.get(
+            "product_variant",
+            getattr(self.instance, "product_variant", None)
+        )
+
+        quantity = attrs.get(
+            "quantity",
+            getattr(self.instance, "quantity", 1)
+        )
+
+        if product_variant and quantity > product_variant.stock:
+            raise serializers.ValidationError({
+                "quantity": "Not enough stock."
+            })
+
+        return attrs
+
+    def create(self, validated_data):
+
+        # update quantity of existing cart item
+        request = self.context["request"]
+        cart = Cart.objects.get(user=request.user)
+
+        product_variant = validated_data["product_variant"]
+        quantity = validated_data.get("quantity", 1)
+
+
+        item = CartItem.objects.filter(
+            cart=cart,
+            product_variant=product_variant
+        ).first()
+
+        if item:
+            new_quantity = item.quantity + quantity
+
+            if new_quantity > product_variant.stock:
+                raise serializers.ValidationError({
+                    "quantity": "Not enough stock."
+                })
+
+            item.quantity = new_quantity
+            item.save(update_fields=["quantity"])
+            return item
+        
+        cart_item = CartItem.objects.create(
+            **validated_data
+        )
+
+        return cart_item
+
     def update(self, instance, validated_data):
 
         # ensure that the variant has enough stock to update
-        quantity = validated_data.get("quantity")
+        quantity = validated_data.get("quantity", instance.quantity)
 
         if quantity > instance.product_variant.stock:
             raise serializers.ValidationError(
                 "Not enough stock."
             )
+
         
         instance.quantity = quantity
         instance.save()

@@ -13,17 +13,18 @@ from online_store.api.views.order_views import OrderViewset
 from online_store.api.views.order_items_views import OrderItemViewset
 from online_store.api.views.reviews_views import ReviewsViewset
 from online_store.api.views.address_views import AddressViewset
-
+from online_store.api.views.guest_cart_views import GuestCartView
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
-    TokenRefreshView
+    TokenRefreshView,
+    TokenVerifyView,
 )
 
 from online_store.api.views.reset_token_views import (
     PasswordResetRequestView,
     VerifyResetTokenView,
-    PasswordResetConfirmView
+    PasswordResetConfirmView,
 )
 
 
@@ -59,6 +60,10 @@ urlpatterns = [
         TokenRefreshView.as_view(),
         name="token_refresh"
     ),
+    path(
+        "token/verify/",
+        TokenVerifyView.as_view()
+    ),
         path(
         "password-reset/request/",
         PasswordResetRequestView.as_view()
@@ -73,5 +78,10 @@ urlpatterns = [
         "password-reset/confirm/",
         PasswordResetConfirmView.as_view()
     ),
+
+    path(
+        "guest_cart/",
+        GuestCartView.as_view()
+    )
 
 ] + router.urls

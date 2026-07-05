@@ -1,14 +1,13 @@
-import { Navbar } from "../components/Navbar"
 import { LoginForm } from "../components/Auth/Login"
 
 
-export const Login = () => {
+export const Login = (props) => {
 
+    const initialize = props.initialize
     return (
         <>
-            <Navbar />
             <main>
-                <LoginForm />
+                <LoginForm initialize={initialize} />
             </main>
             
         </>
