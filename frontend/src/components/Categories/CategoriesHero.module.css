@@ -1,0 +1,117 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 70px);
+  margin-top: 70px;
+  overflow: hidden;
+  background-color: black;
+  background-image: var(--bg);
+  /* background-image: url('../../assets/1545.jpg'); */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.img {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-overlay {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.57);
+}
+
+.content {
+  line-height: 60px;
+  margin-top: 100px;
+}
+
+.content h1,
+.content p,
+.content a {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.content h1 {
+  font-size: 3.6rem;
+  margin-left: 100px;
+  animation-delay: 0.2s;
+  text-transform: uppercase;
+}
+
+.content p {
+  max-width: 500px;
+  font-size: 1.2rem;
+  margin-left: 100px;
+  line-height: 25px;
+  padding-bottom: 10px;
+  animation-delay: 0.35s;
+  color: white;
+}
+
+.content a {
+  margin-left: 100px;
+  background: black;
+  color: white;
+  width: fit-content;
+  border: 1px solid white;
+  border-radius: 0;
+  padding: 0.5rem 2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----- Media Queries ----- */
+
+@media screen and (max-width: 700px) {
+  .content {
+    margin: 20px;
+    width: 100%
+  }
+  .content h1 {
+    margin-left: 0;
+    font-size: 2.9rem;
+  }
+    .content p {
+    margin-left: 0;
+    max-width: 100%;
+  }
+    .content a {
+    margin-left: 0;
+    padding: 0.8rem 3rem;
+    font-size: 1rem;
+  }
+
+}
+
+@media screen and (min-width: 651px) and (max-width: 1080px) {
+
+}
+
+@media screen and (min-width: 1081px) and (max-width: 700px) {
+
+}

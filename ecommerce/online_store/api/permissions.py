@@ -4,12 +4,12 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 class IsVendor(BasePermission):
 
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.is_vendor()
+        return request.user.is_authenticated and request.user.is_vendor
 
 
 class IsBuyer(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.is_buyer()
+        return request.user.is_authenticated and request.user.is_buyer
     
 
 class IsAdminOrReadOnly(BasePermission):
@@ -42,7 +42,7 @@ class IsOwnerVendorOrReadOnly(BasePermission):
             return True
 
         # Allow authenticated vendors write permissions
-        return request.user.is_authenticated and request.user.is_vendor()
+        return request.user.is_authenticated and request.user.is_vendor
 
     def has_object_permission(self, request, view, obj):
 
@@ -63,7 +63,7 @@ class IsProductVariantOwnerVendorOrReadOnly(BasePermission):
             return True
 
         # Allow authenticated vendors write permissions
-        return request.user.is_authenticated and request.user.is_vendor()
+        return request.user.is_authenticated and request.user.is_vendor
 
     def has_object_permission(self, request, view, obj):
 
@@ -104,7 +104,7 @@ class IsStoreOwnerOrReadOnly(BasePermission):
             return True
 
         # Allow authenticated vendors write permissions
-        return request.user.is_authenticated and request.user.is_vendor()
+        return request.user.is_authenticated and request.user.is_vendor
 
     def has_object_permission(self, request, view, obj):
 

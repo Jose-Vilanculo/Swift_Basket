@@ -3,12 +3,15 @@ from django.db.models import Q
 from online_store.models import Product, ProductImage, Category
 from online_store.api.serializers import ProductSerializer
 from online_store.api.permissions import IsOwnerVendorOrReadOnly
+from online_store.api.pagination import ProductPagination
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsOwnerVendorOrReadOnly]
     http_method_names = ["get", "post", "patch", "delete"]
+    pagination_class = ProductPagination
+
 
     def perform_create(self, serializer):
 
@@ -60,6 +63,17 @@ class ProductViewSet(viewsets.ModelViewSet):
             .prefetch_related("images")
         )
 
+
+        # dont show shoppers products that dont have any variants
+        user = self.request.user
+
+        if user.is_authenticated and (user.is_staff or user.is_vendor):
+            pass
+        else:
+            queryset = queryset.filter(variants__isnull=False).distinct()
+
+
+        # get products by search
         search = self.request.query_params.get("search")
 
         if search:

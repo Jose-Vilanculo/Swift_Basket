@@ -3,8 +3,9 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export const LoginForm = () => {
+export const LoginForm = (props) => {
     const navigate = useNavigate()
+    const initialize = props.initialize
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -50,7 +51,10 @@ export const LoginForm = () => {
             setSuccessMessage(
                 "Login successful! Redirecting..."
             )
-            navigate("/")
+            
+            await initialize();
+            navigate("/");
+            
                     }
         catch (error) {
             console.error(error.response?.data || error);

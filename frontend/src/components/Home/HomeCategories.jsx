@@ -32,7 +32,7 @@ export const HomeCategories = () => {
                                 Sport Deals.
                             </h1>
                         </div>
-                        <a>
+                        <a href="http://localhost:5173/products/sportswear">
                             View Items {" >> "}
                         </a>
                     </div>
@@ -55,7 +55,7 @@ export const HomeCategories = () => {
                                 <h1>
                                     Gym Equipment
                                 </h1>
-                                <a>
+                                <a href="http://localhost:5173/products/gym-fitness">
                                     View Items {" >> "}
                                 </a>
                             </div>
@@ -77,7 +77,7 @@ export const HomeCategories = () => {
                                 <h1>
                                     Tech Deals
                                 </h1>
-                                <a>
+                                <a href="http://localhost:5173/products/electronics">
                                     View Items {" >> "}
                                 </a>
                             </div>
@@ -108,7 +108,7 @@ export const HomeCategories = () => {
                                 Explore furniture designed to transform your living space.
                             </h4>
                         </div>
-                        <a>
+                        <a href="http://localhost:5173/products/home-living">
                             View Items {" >> "}
                         </a>
                     </div>
@@ -131,7 +131,7 @@ export const HomeCategories = () => {
                                 <h1>
                                     HIM
                                 </h1>
-                                <a>
+                                <a href="http://localhost:5173/products/mens-fashion">
                                     View Items {" >> "}
                                 </a>
                             </div>
@@ -153,7 +153,7 @@ export const HomeCategories = () => {
                                 <h1>
                                     HER
                                 </h1>
-                                <a>
+                                <a href="http://localhost:5173/products/womens-fashion">
                                     View Items {" >> "}
                                 </a>
                             </div>

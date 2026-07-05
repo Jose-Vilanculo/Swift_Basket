@@ -5,8 +5,9 @@ import { CiShoppingBasket} from 'react-icons/ci';
 import { PiUserLight } from 'react-icons/pi';
 import axios from 'axios';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
-import { getAccessToken, isAuthenticated, logout } from '../services/auth';
+import { getAccessToken, logout } from '../services/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { deleteGuestCartItem, updateGuestQuantity } from '../services/guest_cart';
 
 
 const navItems = [
@@ -16,18 +17,22 @@ const navItems = [
 ]
 
 
-export const Navbar = () => {
+export const Navbar = (props) => {
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [authenicated] = useState(isAuthenticated());
-    const [cartItems, setCartItems] = useState([]);
     const [categories, setCategories] = useState([]);
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
     const [openCategory, setOpenCategory] = useState(null);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
+    const isCartOpen = props.isCartOpen;
+    const setIsCartOpen = props.setIsCartOpen;
+    const fetchCartItems = props.fetchCartItems;
+    const cartItems = props.cartItems;
+    const authenicated = props.authenicated
+    const initialize = props.initialize
 
+    
 
     // Use effect to get categories
     useEffect(() => {
@@ -48,32 +53,8 @@ export const Navbar = () => {
     }, []);
 
 
-    const fetchCartItems = async () => {
-        try {
-            const accessToken = getAccessToken()
-
-            const response = await axios.get(
-                "http://127.0.0.1:8000/api/cart/",
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                }
-            );
-            setCartItems(response.data.results[0]);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    // Use effect to get cartItems
-    useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchCartItems();
-    }, []);
-
-    console.log(cartItems);
-    console.log(cartItems.cartitem_set)
+    // console.log(cartItems);
+    // console.log(cartItems.cartitem_set)
 
 
     /* useEffect to lock scrolling while menu is open */
@@ -117,9 +98,9 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleLogIn = () => {
+    const handleLogIn = async() => {
         if (authenicated) {
-            return;
+            await initialize();
         }
         navigate("/login");
         }
@@ -131,6 +112,7 @@ export const Navbar = () => {
             window.location.reload();
         } else {
             navigate("/");
+            initialize();
         }
     }
 
@@ -157,7 +139,15 @@ export const Navbar = () => {
         };
     }, []);
 
-    const updateQuantity = async (cartItemId, quantity) => {
+    const updateQuantity = async (cartItemId, quantity, GuestItemId) => {
+
+        console.log(GuestItemId + quantity);
+        if (!authenicated) {
+            updateGuestQuantity(GuestItemId, quantity);
+            fetchCartItems(authenicated);
+            return;
+        }
+
     try {
         const accessToken = getAccessToken()
 
@@ -171,11 +161,37 @@ export const Navbar = () => {
             }
         );
 
-        fetchCartItems();
+        fetchCartItems(authenicated);
     } catch (error) {
         console.error(error);
     }
 };
+
+    const deleteButton = async (cartItemId, variantId) => {
+
+        if (!authenicated) {
+            deleteGuestCartItem(variantId);
+            fetchCartItems(authenicated)
+            return;
+        }
+
+        try {
+            const accessToken = getAccessToken()
+
+            await axios.delete(
+                `http://127.0.0.1:8000/api/cart-items/${cartItemId}/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                }
+            );
+
+            fetchCartItems(authenicated);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 
     return (
@@ -217,10 +233,23 @@ export const Navbar = () => {
                                 key={category.id}
                                 className={classes.mainCategory}
                             >
-                                <span>{category.name}</span>
+                                {category.subcategories?.length > 0 && (
+                                    <a
+                                        href={`/products/${category.slug}`}
+                                        className={classes["main-link"]}
+                                    >
+                                    <img 
+                                        src={category.icon}
+                                        alt='categories background image'
+                                        className={classes["img-icon"]}
+                                    />
+                                    <span>{category.name}</span>
+                                    </a>
+                                )}
+                                
 
                                 {/* Only put arrow if category has a subcategory */}
-                                {category.subcategories?.length > 0 && <IoIosArrowForward />}
+                                {category.subcategories?.length > 0 && <IoIosArrowForward size={15} className={classes.arrow}/>}
                                 
 
                                 {category.subcategories?.length > 0 && (
@@ -228,9 +257,14 @@ export const Navbar = () => {
                                         {category.subcategories.map((subcategory) => (
                                             <a
                                                 key={subcategory.id}
-                                                href={`/products?category=${subcategory.slug}`}
+                                                href={`/products/${subcategory.slug}`}
                                                 className={classes.subCategory}
                                             >
+                                                <img 
+                                                    src={subcategory.icon}
+                                                    alt='categories background image'
+                                                    className={classes["img-icon"]}
+                                                />
                                                 {subcategory.name}
                                             </a>
                                         ))}
@@ -398,7 +432,7 @@ export const Navbar = () => {
                                                                 className={classes["mobile-category-header"]}
                                                             >
                                                                 <a
-                                                                    href={`/products?category=${category.slug}`}
+                                                                    href={`/products/${category.slug}`}
                                                                     className={classes["mobile-category-link"]}
                                                                 >
                                                                     {category.name}
@@ -435,7 +469,7 @@ export const Navbar = () => {
                                                                             (subcategory) => (
                                                                                 <a
                                                                                     key={subcategory.id}
-                                                                                    href={`/products?category=${subcategory.slug}`}
+                                                                                    href={`/products/${subcategory.slug}`}
                                                                                     className={
                                                                                         classes["mobile-subcategory"]
                                                                                     }
@@ -523,7 +557,10 @@ export const Navbar = () => {
                                         </div>
 
                                         <div className={classes["product-form"]}>
-                                            <div className={classes.delete}>
+                                            <div
+                                                className={classes.delete}
+                                                onClick={() => deleteButton(item.id, item.product_variant.id)}
+                                            >
                                                 <Trash2 size={17}/>
                                             </div>
                                             <div className={classes["form"]}>
@@ -533,7 +570,11 @@ export const Navbar = () => {
                                                         type="button"
                                                         className={classes["quantity-button"]}
                                                         onClick={() =>
-                                                            updateQuantity(item.id, item.quantity - 1)
+                                                            updateQuantity(
+                                                                item.id,
+                                                                item.quantity - 1,
+                                                                item.product_variant.id,
+                                                            )
                                                         }
                                                         // disable the minus once on 1
                                                         disabled={item.quantity <= 1} 
@@ -549,7 +590,11 @@ export const Navbar = () => {
                                                         type="button"
                                                         className={classes["quantity-button"]}
                                                         onClick={() =>
-                                                            updateQuantity(item.id, item.quantity + 1)
+                                                            updateQuantity(
+                                                                item.id,
+                                                                item.quantity + 1,
+                                                                item.product_variant.id,
+                                                            )
                                                         }
                                                     >
                                                         +
