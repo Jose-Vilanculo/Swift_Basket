@@ -8,6 +8,7 @@ import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { getAccessToken, logout } from '../services/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { deleteGuestCartItem, updateGuestQuantity } from '../services/guest_cart';
+import { formatPrice } from '../services/formatPrice';
 
 
 const navItems = [
@@ -547,13 +548,19 @@ export const Navbar = (props) => {
                                         </div>
 
                                         <div className={classes["product-details"]}>
-                                            <h5>{item.item.product_name}</h5>
+                                            <h5 onClick={() => {
+                                                navigate(`/product/${item.item.slug}`);
+                                                setIsCartOpen(false);
+                                                }
+                                            }>
+                                                {item.item.product_name}
+                                            </h5>
                                             {Object.entries(item.product_variant.attributes).map(([key, value]) => (
                                                 <p key={key}>
                                                     {key}: {value}
                                                 </p>
                                             ))}
-                                            <h4>R {item.line_price}</h4>
+                                            <h4>R {formatPrice(item.line_price)}</h4>
                                         </div>
 
                                         <div className={classes["product-form"]}>
@@ -617,7 +624,7 @@ export const Navbar = (props) => {
                             <>
                             <div className={classes["total-price"]}>
                                 <h4>Subtotal ({cartItems.total_products} Items)</h4>
-                                <h4>R {cartItems.subtotal}</h4>
+                                <h4>R {formatPrice(cartItems.subtotal)}</h4>
                             </div>
                             <a>
                                 Continue to Checkout

@@ -101,6 +101,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
 
     subcategories = serializers.SerializerMethodField()
+    parent_name = serializers.SerializerMethodField()
+    parent_slug = serializers.SerializerMethodField()
 
     def get_subcategories(self, obj):
         return CategorySerializer(
@@ -108,6 +110,12 @@ class CategorySerializer(serializers.ModelSerializer):
             many=True,
             context=self.context
         ).data
+    
+    def get_parent_name(self, obj):
+        return obj.parent.name if obj.parent else None
+    
+    def get_parent_slug(self, obj):
+        return obj.parent.slug if obj.parent else None
 
     class Meta:
         model = Category
@@ -119,7 +127,9 @@ class CategorySerializer(serializers.ModelSerializer):
             "background_image",
             "description",
             "slug",
-            "subcategories"
+            "subcategories",
+            "parent_name",
+            "parent_slug"
         ]
 
 
@@ -214,7 +224,8 @@ class MiniProductSerializer(serializers.ModelSerializer):
         fields = [
             "product_id",
             "product_name",
-            "main_image"
+            "main_image",
+            "slug"
         ]
 
 

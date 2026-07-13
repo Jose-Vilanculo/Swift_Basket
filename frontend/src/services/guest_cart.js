@@ -1,4 +1,8 @@
+
+
+// Adds Items to cart from category products Page
 export const addGuestCartItem = (product) => {
+
 
     const cart = JSON.parse(localStorage.getItem("guest_cart")) || [];
     console.log("length: " + cart.length);
@@ -12,13 +16,14 @@ export const addGuestCartItem = (product) => {
             }
         ];
         localStorage.setItem("guest_cart", JSON.stringify(item));
-        return;
+        return true;
     }
 
     // dont add variant if there's multiple variants
     if (product.product_variant.length > 1) {
+        window.location.href = `/product/${product.slug}`;
         console.log("select variant");
-        return;
+        return false;
     }
 
 
@@ -38,6 +43,7 @@ export const addGuestCartItem = (product) => {
         );
     }
     localStorage.setItem("guest_cart", JSON.stringify(cart));
+    return true;
 }
 
 
@@ -58,6 +64,44 @@ export const updateGuestQuantity = (product, quantity) => {
 
     localStorage.setItem("guest_cart", JSON.stringify(cart));
 }
+
+// Adds Items to cart from productDetails Page
+export const addToCart = (variant, quantity) => {
+
+    const cart = JSON.parse(localStorage.getItem("guest_cart")) || [];
+    console.log("length: " + cart.length);
+
+    // create new guest cart and add new item
+    if (cart.length === 0) {
+        const item = [
+            {
+                product_variant_id: variant,
+                quantity: quantity
+            }
+        ];
+        localStorage.setItem("guest_cart", JSON.stringify(item));
+        return;
+    }
+
+
+    // add to the quantity of an existing item or add a new item
+    const existingItems = cart.find(
+        item => item.product_variant_id === variant
+    )
+
+    if (existingItems) {
+        existingItems.quantity += quantity;
+    } else {
+        cart.push(
+            {
+                product_variant_id: variant,
+                quantity: quantity
+            }
+        );
+    }
+    localStorage.setItem("guest_cart", JSON.stringify(cart));
+
+};
 
 
 

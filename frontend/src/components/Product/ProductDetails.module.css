@@ -1,0 +1,476 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+.product-section {
+    width: 100%;
+    min-height: 101vh;
+    display: flex;
+    margin-top: 50px;
+    padding-bottom: 100px;
+}
+
+.image-section{
+    display: flex;
+    width: 50%;
+}
+
+.gallery {
+    width: 480px;
+    margin: auto;
+}
+
+.mainImage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fafafa;
+    aspect-ratio: 1 / 1;
+}
+
+.mainImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: fade .2s ease;
+}
+
+@keyframes fade {
+    from {
+        opacity: .5;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.arrow {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,.9);
+    cursor: pointer;
+    transition: .25s;
+}
+
+.arrow:hover {
+    background: white;
+    box-shadow: 0 6px 20px rgba(0,0,0,.15);
+}
+
+.arrow:first-of-type {
+    left: 20px;
+}
+
+.arrow:last-of-type {
+    right: 20px;
+}
+
+.thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.thumbnails img {
+    width: 90px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: .25s;
+}
+
+.thumbnails img:hover {
+    transform: scale(1.04);
+}
+
+.active {
+    border-color: black;
+}
+
+.product-infomation {
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    /* margin-top: 100px; */
+    margin: auto;
+    color: #515151;
+
+}
+
+.info {
+    display: flex;
+    width: 70%;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.links {
+    display: flex;
+    gap: 5px;
+}
+
+.product-infomation a {
+    color: grey;
+    font-weight: 300;
+    font-size: 0.9rem;
+    margin: 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.product-infomation a:hover {
+    text-decoration: underline;
+}
+
+.product-infomation h2 {
+    font-size: 2rem;
+    width: 90%;
+    margin: 0;
+    line-height: 2.6rem;
+    color: #515151;
+
+}
+
+.price-review {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.review {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 120px;
+}
+
+.rating {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #ffb000;
+}
+
+.rating a {
+    color: #515151;
+    font-weight: 300;
+    font-size: 0.9rem;
+    text-align: end;
+    padding-right: 2px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.rating a:hover {
+    text-decoration: underline;
+}
+
+.no-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    /* color: black; */
+}
+
+.no-rating p {
+    font-weight: 300 !important;
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0 !important;
+}
+
+.product-infomation h3 {
+    font-size: 1.7rem;
+    margin: 0;
+}
+
+.description-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.product-infomation h4 {
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 500;
+    color: black;
+}
+
+.description p {
+    margin: 0;
+    line-height: 1.7;
+    color: #2C2C2C;
+}
+
+.description p:not(.expanded) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+.readMore {
+    /* position: relative;
+    right: 0%; */
+    margin: 5px 0;
+    width: 94%;
+    text-align: start;
+    padding: 0;
+    border: none;
+    background: none;
+    color: rgb(0, 115, 255);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: .95rem;
+}
+
+.readMore:hover {
+    text-decoration: underline;
+}
+
+.product-infomation p {
+    width: 95%;
+    margin-top: -15px;
+}
+
+/* Product Variant */
+.variant {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    width: 90%;
+    gap: 8px;
+}
+
+.variant label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #666;
+}
+
+.variant select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: all .2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M2.646 5.646a.5.5 0 0 1 .708 0L8 10.293l4.646-4.647a.5.5 0 0 1 .708.708l-5 5a.5.5 0 0 1-.708 0l-5-5a.5.5 0 0 1 0-.708'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 48px;
+}
+
+.variant select:hover {
+    border-color: #999;
+}
+
+.variant select:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, .08);
+}
+
+/* Quantity selector */
+.quantity-cart {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.container label {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 600;
+}
+
+.selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 120%;
+    height: 40px;
+
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background: white;
+}
+
+.selector:hover {
+    border-color: #999;
+}
+
+.selector button {
+    width: 40px;
+    height: 100%;
+
+    border: none;
+    background: transparent;
+
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+    transition: background .2s;
+}
+
+.selector button:hover {
+    background: #f7f7f7;
+    border-radius: 10px;
+}
+
+.selector span {
+    flex: 1;
+    text-align: center;
+
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.add-to-cart {
+    display: flex;
+    margin-top: auto;
+    margin-bottom: 0;
+
+    gap: 25px;
+
+
+    height: 45px;
+    width: 60%;
+    font-size: 0.9rem;
+    font-weight: 600;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 2px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    cursor: pointer;
+}
+
+/* ----- Media Quesries -----  */
+
+@media screen and (max-width: 650px) {
+    .product-section {
+        flex-direction: column;
+        margin-top: 80px;
+    }
+    .image-section {
+        width: 100%;
+    }
+    .gallery {
+        width: 90%;
+    }
+    .product-infomation {
+        width: 100%;
+        padding-top: 50px;
+    }
+    .info {
+        width: 85%;
+    }
+    .product-infomation h2 {
+        width: 100%;
+    }
+    .price-review {
+        width: 100%;
+    }
+    .product-infomation p {
+        width: 100%;
+    }
+    .readMore {
+        width: 100%;
+
+    }
+    .variant {
+        width: 100%;
+    }
+    .quantity-cart {
+        width: 100%;
+    }
+    .thumbnails img {
+        width: 60px;
+    }
+}
+
+@media screen and (min-width: 601px) and (max-width: 1080px) {
+    .product-section {
+        flex-direction: column;
+        margin-top: 80px;
+    }
+    .image-section {
+        width: 100%;
+    }
+    .gallery {
+        width: 90%;
+    }
+    .product-infomation {
+        width: 100%;
+        padding-top: 50px;
+    }
+    .info {
+        width: 85%;
+    }
+    .product-infomation h2 {
+        width: 100%;
+    }
+    .price-review {
+        width: 100%;
+    }
+    .product-infomation p {
+        width: 100%;
+    }
+    .readMore {
+        width: 100%;
+
+    }
+    .variant {
+        width: 100%;
+    }
+    .quantity-cart {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 1080px) and (max-width: 1400px) {
+
+    .product-section {
+        margin-top: 15px;
+    }
+
+    .info {
+        width: 90%;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .gallery {
+        margin: auto 10% auto auto;
+    }
+    .info {
+        width: 75%;
+        margin-right: auto;
+        margin-left: 10%;
+    }
+}
