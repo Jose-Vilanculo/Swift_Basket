@@ -5,6 +5,8 @@ import { HiMiniStar, HiOutlineStar } from 'react-icons/hi2';
 import { LiaCartPlusSolid } from 'react-icons/lia';
 import { getAccessToken } from '../../services/auth';
 import { addGuestCartItem } from '../../services/guest_cart';
+import { useNavigate } from 'react-router-dom';
+import { formatPrice } from '../../services/formatPrice';
 
 
 export const Products = (props) => {
@@ -18,6 +20,7 @@ export const Products = (props) => {
     const [products, setProducts] = useState([]);
     const [currentCategory, setCurrentCategory] = useState("");
     const authenicated = props.authenicated
+    const navigate = useNavigate();
     
     // Use effect to get products by their categories
     useEffect(() => {
@@ -63,9 +66,12 @@ export const Products = (props) => {
     const handleAddItem = async (product) => {
 
         if (!authenicated) {
-            addGuestCartItem(product);
+            const response = addGuestCartItem(product);
             fetchCartItems(authenicated);
-            setIsCartOpen(true);
+            // only open cart if an item is successfully added
+            if (response) {
+                setIsCartOpen(true);
+            }
             return;
         }
 
@@ -76,7 +82,7 @@ export const Products = (props) => {
 
                 console.log(product.product_variant[0].id);
 
-                const accessToken = getAccessToken()
+                const accessToken = getAccessToken();
                 await axios.post(
                     "http://127.0.0.1:8000/api/cart-items/",
                     {
@@ -133,6 +139,7 @@ export const Products = (props) => {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPage(1);
     }, [category]);
 
@@ -152,6 +159,7 @@ export const Products = (props) => {
                                 <img
                                     src={product.main_image.image}
                                     alt={product.product_name}
+                                    onClick={() => navigate(`/product/${product.slug}`)}
                                 />
                             </div>
 
@@ -180,10 +188,15 @@ export const Products = (props) => {
                             )}
 
                             <div className={classes.bottom}>
-                                <p>R {product.price}</p>
+                                <p>R {formatPrice(product.price)}</p>
                                 
                                 <div className={classes.buttons}>
-                                    <a className={classes["view-item"]}>View Product</a>
+                                    <a
+                                        className={classes["view-item"]}
+                                        href={`http://localhost:5173/product/${product.slug}`}
+                                    >
+                                        View Product
+                                    </a>
                                     <button
                                         className={classes["add-item"]}
                                         onClick={() => handleAddItem(product)}

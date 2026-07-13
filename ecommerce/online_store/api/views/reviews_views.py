@@ -10,10 +10,10 @@ class ReviewsViewset(viewsets.ModelViewSet):
     
 
     def get_queryset(self):
-        product = self.request.query_params.get("product")
-        if product:
+        slug = self.request.query_params.get("slug")
+        if slug:
             return Review.objects.filter(
-                product=product
+                product__slug=slug
             )
         
         raise serializers.ValidationError(

@@ -72,6 +72,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         else:
             queryset = queryset.filter(variants__isnull=False).distinct()
 
+        product_slug = self.request.query_params.get("product")
+        if product_slug:
+            queryset = queryset.filter(slug=product_slug)
 
         # get products by search
         search = self.request.query_params.get("search")

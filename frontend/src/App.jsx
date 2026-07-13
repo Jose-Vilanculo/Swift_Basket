@@ -10,6 +10,7 @@ import { Navbar } from "./components/Navbar"
 import axios from "axios"
 import { getAccessToken, isAuthenticated } from "./services/auth"
 import { getGuestCart } from "./services/guest_cart"
+import { ProductPage } from "./pages/ProductPage"
 
 function App() {
 
@@ -29,9 +30,7 @@ function App() {
                 items: guestCart
             }
           );
-          console.log(response);
           setCartItems(response.data);
-          console.log(cartItems);
           return;
         } catch (error) {
           console.log(error)
@@ -74,8 +73,10 @@ const initialize = async () => {
   // Use effect to set authentication status and then get users cartItems
   useEffect(() => {      
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       initialize();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -99,6 +100,16 @@ const initialize = async () => {
           path="/products/:category"
           element={
             <CategoriesPage
+              setIsCartOpen={setIsCartOpen}
+              fetchCartItems={fetchCartItems}
+              authenicated={authenicated}
+            />
+          }
+        />
+        <Route
+          path="/product/:productSlug"
+          element={
+            <ProductPage
               setIsCartOpen={setIsCartOpen}
               fetchCartItems={fetchCartItems}
               authenicated={authenicated}
