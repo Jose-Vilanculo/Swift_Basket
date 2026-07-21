@@ -1,18 +1,24 @@
-import { useEffect, useState, useRef } from 'react';
-import classes from './ProductDetails.module.css'
 import axios from 'axios';
-import { HiMiniStar, HiOutlineStar } from 'react-icons/hi2';
-import { formatPrice } from '../../services/formatPrice';
+import useEmblaCarousel from 'embla-carousel-react';
 import { ShoppingCart } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { HiMiniStar, HiOutlineStar } from 'react-icons/hi2';
 import { getAccessToken } from '../../services/auth';
+import { formatPrice } from '../../services/formatPrice';
 import { addToCart } from '../../services/guest_cart';
+import classes from './ProductDetails.module.css';
 
 
 export const ProductDetails = (props) => {
 
     const [product, setProduct] = useState(null);
-    const [selectedImage, setSelectedImage] = useState(0);
     const [selectedVariant, setSelectedVariant] = useState("");
+
+    const [emblaRef, emblaApi] = useEmblaCarousel({
+        loop: true
+    });
+
+    const [selectedImage, setSelectedImage] = useState(0);
 
     const [expanded, setExpanded] = useState(false);
     const [showReadMore, setShowReadMore] = useState(false);
@@ -24,7 +30,7 @@ export const ProductDetails = (props) => {
     const reviewsCount = props.reviewsCount;
     const setIsCartOpen = props.setIsCartOpen;
     const fetchCartItems = props.fetchCartItems;
-    const authenicated = props.authenicated;
+    const authenticated = props.authenticated;
 
 
     useEffect(() => {
@@ -57,6 +63,22 @@ export const ProductDetails = (props) => {
         );
     }, [product]);
 
+        // Embla Carousel Logic
+
+
+    useEffect(() => {
+        if (!emblaApi) return;
+
+        const onSelect = () => {
+            setSelectedImage(emblaApi.selectedScrollSnap());
+        };
+
+        emblaApi.on("select", onSelect);
+        onSelect();
+
+        return () => emblaApi.off("select", onSelect);
+    }, [emblaApi]);
+
 
     if (!product) {
         return <div>Loading...</div>;
@@ -79,9 +101,9 @@ export const ProductDetails = (props) => {
 
         console.log(variant)
 
-        if (!authenicated) {
+        if (!authenticated) {
             addToCart(variant.id, quantity);
-            fetchCartItems(authenicated);
+            fetchCartItems(authenticated);
             setIsCartOpen(true);
             return;
         }
@@ -100,7 +122,7 @@ export const ProductDetails = (props) => {
                     },
                 }
             );
-            fetchCartItems(authenicated);
+            fetchCartItems(authenticated);
             setIsCartOpen(true);
         } catch(error) {
             console.error(error.response.data);
@@ -119,45 +141,44 @@ export const ProductDetails = (props) => {
             : product.product_variant[selectedVariant];
 
 
-
     return (
         <section className={classes["product-section"]}>
             <div className={classes["image-section"]}>
                 <div className={classes.gallery}>
 
                     <div className={classes.mainImage}>
-
                         <button
                             className={classes.arrow}
-                            onClick={() =>
-                                setSelectedImage(prev =>
-                                    prev === 0
-                                        ? galleryImages.length - 1
-                                        : prev - 1
-                                )
-                            }
+                            onClick={() => emblaApi?.scrollPrev()}
                         >
                             ←
                         </button>
 
-                        <img
-                            src={galleryImages[selectedImage].image}
-                            alt={product.product_name}
-                        />
+                        <div
+                            className={classes.embla}
+                            ref={emblaRef}
+                        >
+                            <div className={classes.emblaContainer}>
+                                {galleryImages.map(image => (
+                                    <div
+                                        key={image.id}
+                                        className={classes.emblaSlide}
+                                    >
+                                        <img
+                                            src={image.image}
+                                            alt={product.product_name}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
                         <button
                             className={classes.arrow}
-                            onClick={() =>
-                                setSelectedImage(prev =>
-                                    prev === galleryImages.length - 1
-                                        ? 0
-                                        : prev + 1
-                                )
-                            }
+                            onClick={() => emblaApi?.scrollNext()}
                         >
                             →
                         </button>
-
                     </div>
 
                     <div className={classes.thumbnails}>
@@ -167,7 +188,7 @@ export const ProductDetails = (props) => {
                                 key={image.id}
                                 src={image.image}
                                 alt=""
-                                onClick={() => setSelectedImage(index)}
+                                onClick={() => emblaApi?.scrollTo(index)}
                                 className={
                                     selectedImage === index
                                         ? classes.active
@@ -210,11 +231,11 @@ export const ProductDetails = (props) => {
                                         star <= product.average_rating ? (
                                             <HiMiniStar key={star} />
                                         ) : (
-                                            <HiOutlineStar key={star} />
+                                            <HiOutlineStar key={star} color={"gray"}/>
                                         )
                                     )}
                                     </div>
-                                    <a>{reviewsCount} reviews</a>
+                                    <a href='#reviews'>{reviewsCount} reviews</a>
                                 </div>
                             )}
 
@@ -303,7 +324,3 @@ export const ProductDetails = (props) => {
         </section>
     )
 }
-
-// Setup and add the reviews count from your App.jsx
-// Add a quantity selector and a add to cart button
-// Make everything responsive

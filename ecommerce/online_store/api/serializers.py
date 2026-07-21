@@ -17,6 +17,7 @@ from rest_framework import serializers
 from django.db.models import Avg
 
 
+
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
@@ -353,6 +354,16 @@ class CartSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
 
+    username = serializers.CharField(
+        source="user.username",
+        read_only=True
+    )
+
+    profile_image = serializers.ImageField(
+        source="user.profile_image",
+        read_only=True
+    )
+
 
     def create(self, validated_data):
 
@@ -387,7 +398,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
-        read_only_fields = ["user", "is_verified", "date_created_at"]
+        read_only_fields = [
+            "user",
+            "is_verified",
+            "date_created_at",
+            "username",
+            "profile_image"
+        ]
 
 
 

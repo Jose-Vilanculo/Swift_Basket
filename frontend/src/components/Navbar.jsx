@@ -1,14 +1,14 @@
-import { Menu, Search, Trash2, X } from 'lucide-react';
-import classes from './Navbar.module.css'
-import { useEffect, useState, useRef } from 'react';
-import { CiShoppingBasket} from 'react-icons/ci';
-import { PiUserLight } from 'react-icons/pi';
 import axios from 'axios';
+import { Menu, Search, Trash2, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { CiShoppingBasket } from 'react-icons/ci';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
-import { getAccessToken, logout } from '../services/auth';
+import { PiUserLight } from 'react-icons/pi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { deleteGuestCartItem, updateGuestQuantity } from '../services/guest_cart';
+import { getAccessToken, logout } from '../services/auth';
 import { formatPrice } from '../services/formatPrice';
+import { deleteGuestCartItem, updateGuestQuantity } from '../services/guest_cart';
+import classes from './Navbar.module.css';
 
 
 const navItems = [
@@ -30,7 +30,7 @@ export const Navbar = (props) => {
     const setIsCartOpen = props.setIsCartOpen;
     const fetchCartItems = props.fetchCartItems;
     const cartItems = props.cartItems;
-    const authenicated = props.authenicated
+    const authenticated = props.authenticated
     const initialize = props.initialize
 
     
@@ -100,7 +100,7 @@ export const Navbar = (props) => {
     const location = useLocation();
 
     const handleLogIn = async() => {
-        if (authenicated) {
+        if (authenticated) {
             await initialize();
         }
         navigate("/login");
@@ -143,14 +143,14 @@ export const Navbar = (props) => {
     const updateQuantity = async (cartItemId, quantity, GuestItemId) => {
 
         console.log(GuestItemId + quantity);
-        if (!authenicated) {
+        if (!authenticated) {
             updateGuestQuantity(GuestItemId, quantity);
-            fetchCartItems(authenicated);
+            fetchCartItems(authenticated);
             return;
         }
 
     try {
-        const accessToken = getAccessToken()
+        const accessToken = getAccessToken();
 
         await axios.patch(
             `http://127.0.0.1:8000/api/cart-items/${cartItemId}/`,
@@ -162,7 +162,7 @@ export const Navbar = (props) => {
             }
         );
 
-        fetchCartItems(authenicated);
+        fetchCartItems(authenticated);
     } catch (error) {
         console.error(error);
     }
@@ -170,9 +170,9 @@ export const Navbar = (props) => {
 
     const deleteButton = async (cartItemId, variantId) => {
 
-        if (!authenicated) {
+        if (!authenticated) {
             deleteGuestCartItem(variantId);
-            fetchCartItems(authenicated)
+            fetchCartItems(authenticated)
             return;
         }
 
@@ -188,7 +188,7 @@ export const Navbar = (props) => {
                 }
             );
 
-            fetchCartItems(authenicated);
+            fetchCartItems(authenticated);
         } catch (error) {
             console.error(error);
         }
@@ -298,7 +298,7 @@ export const Navbar = (props) => {
             {/* Right-side Nav */}
             <div
                 className={
-                    authenicated
+                    authenticated
                     ? classes["user-cart"]
                     : classes["no-user-cart"]
                 }
@@ -309,13 +309,13 @@ export const Navbar = (props) => {
                 <div ref={menuRef} className={classes["menu-ref"]}>
                     <div
                         className={
-                            authenicated
+                            authenticated
                             ? classes["user-wrapper"]
                             : classes["no-user-wrapper"]
                         }
                         // only allow if user is logged in
                         onClick={() => {
-                            if (authenicated) {
+                            if (authenticated) {
                                 setIsUserMenuOpen((prev) => !prev);
                             } else {
                                 handleLogIn()
@@ -348,7 +348,7 @@ export const Navbar = (props) => {
                         )}
                                             <div 
                             className={
-                                authenicated
+                                authenticated
                                 ? classes.user
                                 : classes["no-user"]
                             }

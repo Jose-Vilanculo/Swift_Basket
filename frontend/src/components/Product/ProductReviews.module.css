@@ -1,0 +1,292 @@
+.reviews-section {
+    width: 70%;
+    min-height: 0;
+    background-color: #f4f4f4;
+    margin: auto;
+}
+
+.heading {
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    align-items: center;
+    margin: 4.5rem auto;
+}
+
+.reviews-section h1 {
+    color: black;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.underline {
+    height: 3px;
+    width: 110%;
+    margin: -6px 0 0 0;
+    background-color: #1976d2;
+}
+
+
+/* Overall Summary */
+
+.no-reviews {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    padding: 40px 20px 0;
+    text-align: center;
+    color: black;
+    margin: auto;
+}
+
+.no-reviews h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0px;
+}
+
+.no-reviews p {
+    margin-top: 50px;
+    color: #777;
+}
+.no-reviews .underline {
+    width: 110%;
+}
+
+.summary-feature {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+    gap: 0.5rem;
+}
+
+.overall {
+    display: flex;
+    align-items: flex-end;
+    text-align: flex-end;
+    gap: 15px;
+    margin-bottom: -0.6rem;
+}
+.rating-row {
+    display: flex;
+    align-items: center;
+    margin: 5px 20px 10px;
+    gap: 7px;
+}
+
+.rating-row p{
+    padding-top: 2px;
+    margin: 0 !important;
+}
+.stars {
+    display: flex;
+    gap: 2px;
+    color: #ffb000;
+}
+
+.gray {
+    color: #515151;
+}
+
+.summary h2 {
+    font-size: 3rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+.reviews {
+    display: flex;
+    align-items: center;
+    width: 500px;
+    gap: 1rem;
+}
+
+.breakdown {
+    flex: 1;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    margin-bottom: .3rem;
+    color: black;
+}
+
+.row span {
+    width: 70px;
+}
+
+.track {
+    flex: 1;
+    height: 8px;
+    background: #ddd;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: #1976d2;
+    border-radius: inherit;
+}
+
+/* Review List */
+.review-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px;
+    gap: 20px;
+    color: black;
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    background-color: white;
+    border: 1px solid #ced0cf;
+    border-radius: 7px;
+    gap: 5px;
+}
+
+.user {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 20px 5px;
+}
+
+.user-details {
+    display: flex;
+    gap: 10px;
+}
+
+.profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    width: 55px;
+    height: 55px;
+
+    font-weight: 600;
+    color: #515151;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    border: 1px solid rgb(214, 214, 214);
+    background-color: #e6e6e6;
+}
+
+.profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.name h5 {
+    margin: 0;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.name h6 {
+    margin: 0;
+    font-weight: 400;
+    color: #757575;
+}
+
+.green {
+    color: rgb(0, 114, 0) !important;
+}
+
+.cards h4 {
+    margin: 0 20px;
+    font-weight: 549;
+}
+
+.cards p {
+    margin: 0 20px;
+    font-size: 0.95rem;
+    color: rgb(95, 95, 95);
+}
+
+.date {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.buttons button {
+    background-color: black;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 1rem;
+
+    cursor: pointer;
+}
+
+/* .white {
+    position: absolute;
+    width: 90%;
+    height: 100px;
+    background-color: white;
+} */
+
+
+/* ----- Media Queries ----- */
+
+@media screen and (max-width: 650px) {
+    .reviews-section {
+        width: 100%;
+    }
+    .cards {
+        width: 110%;
+    }
+    .reviews {
+        width: 80%;
+    }
+    .summary-feature {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* gap: 2rem; */
+    }
+
+}
+
+
+@media screen and (min-width: 601px) and (max-width: 1080px) {
+    .reviews-section {
+        width: 100%;
+    }
+    .cards {
+        width: 90%;
+    }
+    .reviews {
+        width: 55%;
+    }
+}
+
+@media screen and (min-width: 1080px) and (max-width: 1400px) {
+    .reviews-section {
+        width: 90%;
+    }
+    .cards {
+        width: 80%;
+    }
+}

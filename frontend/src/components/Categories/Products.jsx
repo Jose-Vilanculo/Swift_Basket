@@ -1,12 +1,12 @@
-import classes from './Products.module.css'
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { HiMiniStar, HiOutlineStar } from 'react-icons/hi2';
 import { LiaCartPlusSolid } from 'react-icons/lia';
-import { getAccessToken } from '../../services/auth';
-import { addGuestCartItem } from '../../services/guest_cart';
 import { useNavigate } from 'react-router-dom';
+import { getAccessToken } from '../../services/auth';
 import { formatPrice } from '../../services/formatPrice';
+import { addGuestCartItem } from '../../services/guest_cart';
+import classes from './Products.module.css';
 
 
 export const Products = (props) => {
@@ -19,7 +19,7 @@ export const Products = (props) => {
     const fetchCartItems = props.fetchCartItems;
     const [products, setProducts] = useState([]);
     const [currentCategory, setCurrentCategory] = useState("");
-    const authenicated = props.authenicated
+    const authenticated = props.authenticated
     const navigate = useNavigate();
     
     // Use effect to get products by their categories
@@ -65,9 +65,9 @@ export const Products = (props) => {
 
     const handleAddItem = async (product) => {
 
-        if (!authenicated) {
+        if (!authenticated) {
             const response = addGuestCartItem(product);
-            fetchCartItems(authenicated);
+            fetchCartItems(authenticated);
             // only open cart if an item is successfully added
             if (response) {
                 setIsCartOpen(true);
@@ -95,7 +95,7 @@ export const Products = (props) => {
                         }
                     }
                 );
-                fetchCartItems(authenicated);
+                fetchCartItems(authenticated);
                 setIsCartOpen(true);
                 
                 
@@ -171,7 +171,7 @@ export const Products = (props) => {
                                         star <= product.average_rating ? (
                                             <HiMiniStar key={star} />
                                         ) : (
-                                            <HiOutlineStar key={star} />
+                                            <HiOutlineStar key={star} color={"gray"}/>
                                         )
                                     )}
                                 </div>

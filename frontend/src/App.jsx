@@ -11,16 +11,17 @@ import axios from "axios"
 import { getAccessToken, isAuthenticated } from "./services/auth"
 import { getGuestCart } from "./services/guest_cart"
 import { ProductPage } from "./pages/ProductPage"
+import { Toaster } from "react-hot-toast"
 
 function App() {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-  const [authenicated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
 
-  const fetchCartItems = async (authenicated) => {
+  const fetchCartItems = async (authenticated) => {
 
-    if (!authenicated) {
+    if (!authenticated) {
       const guestCart = getGuestCart();
         try {
 
@@ -81,6 +82,8 @@ const initialize = async () => {
 
   return (
     <>
+
+    <Toaster position="top-right" />
     
     <BrowserRouter>
     <Navbar
@@ -88,7 +91,7 @@ const initialize = async () => {
       setIsCartOpen={setIsCartOpen}
       fetchCartItems={fetchCartItems}
       cartItems={cartItems}
-      authenicated={authenicated}
+      authenticated={authenticated}
       initialize={initialize}
     />
       <Routes>
@@ -102,7 +105,7 @@ const initialize = async () => {
             <CategoriesPage
               setIsCartOpen={setIsCartOpen}
               fetchCartItems={fetchCartItems}
-              authenicated={authenicated}
+              authenticated={authenticated}
             />
           }
         />
@@ -112,7 +115,7 @@ const initialize = async () => {
             <ProductPage
               setIsCartOpen={setIsCartOpen}
               fetchCartItems={fetchCartItems}
-              authenicated={authenicated}
+              authenticated={authenticated}
             />
           }
         />
