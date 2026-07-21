@@ -85,7 +85,7 @@ class IsOwnerBuyerOrReadOnly(BasePermission):
             return True
 
         # Allow authenticated buyers write permissions
-        return request.user.is_authenticated and request.user.is_buyer()
+        return request.user.is_authenticated and request.user.is_buyer
 
     def has_object_permission(self, request, view, obj):
 

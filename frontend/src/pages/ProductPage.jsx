@@ -1,7 +1,8 @@
-import { useParams } from "react-router-dom"
-import { ProductDetails } from "../components/Product/ProductDetails";
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { ProductDetails } from "../components/Product/ProductDetails";
+import { ProductReviews } from "../components/Product/ProductReviews";
 
 export const ProductPage = (props) => {
 
@@ -9,7 +10,7 @@ export const ProductPage = (props) => {
     const [reviewsCount, setReviews] = useState([]);
     const setIsCartOpen = props.setIsCartOpen;
     const fetchCartItems = props.fetchCartItems;
-    const authenicated = props.authenicated;
+    const authenticated = props.authenticated;
 
     useEffect(() => {
         const getReviews = async() => {
@@ -19,7 +20,7 @@ export const ProductPage = (props) => {
                     `http://127.0.0.1:8000/api/reviews/?slug=${productSlug}`
                 );
 
-                setReviews(response.data.count);
+                setReviews(response.data.review_count);
             } catch(error) {
                 console.log(error);
             };
@@ -37,9 +38,14 @@ export const ProductPage = (props) => {
                 reviewsCount={reviewsCount}
                 setIsCartOpen={setIsCartOpen}
                 fetchCartItems={fetchCartItems}
-                authenicated={authenicated}
+                authenticated={authenticated}
                 />
-            
+                
+            <ProductReviews
+                authenticated={authenticated}
+                productSlug={productSlug}
+                authenitcated={authenticated}
+            />
         </main>
         </>
     )

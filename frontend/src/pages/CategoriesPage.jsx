@@ -1,7 +1,7 @@
-import { CategoriesHero } from "../components/Categories/CategoriesHero"
+import { useParams } from "react-router-dom";
+import { CategoriesHero } from "../components/Categories/CategoriesHero";
 import { Products } from "../components/Categories/Products";
 import { Subcategory } from "../components/Categories/Subcategory";
-import { useParams } from "react-router-dom";
 
 
 export const CategoriesPage = (props) => {
@@ -11,7 +11,7 @@ export const CategoriesPage = (props) => {
 
     const setIsCartOpen = props.setIsCartOpen;
     const fetchCartItems = props.fetchCartItems;
-    const authenicated = props.authenicated
+    const authenticated = props.authenticated
     return (
         <>
 
@@ -22,7 +22,7 @@ export const CategoriesPage = (props) => {
                 category={category}
                 setIsCartOpen={setIsCartOpen}
                 fetchCartItems={fetchCartItems}
-                authenicated={authenicated}
+                authenticated={authenticated}
             />
         </main>
         </>
