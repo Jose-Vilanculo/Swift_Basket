@@ -1,0 +1,74 @@
+.addressForm {
+    background: transparent;
+}
+
+.addressForm h2 {
+    font-size: 1rem;
+    margin-bottom: -.4rem;
+}
+
+.addressForm p {
+    color: #515151;
+    font-size: 0.8rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.3rem;
+    margin-top: 1rem;
+}
+
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.field label {
+    font-weight: 600;
+    font-size: .8rem;
+}
+
+.field input,
+.field select {
+    height: 2.7rem;
+    width: calc(100% - 20px);
+    border: none;
+    border-radius: 5px;
+    font-size: .8rem;
+    transition: .2s;
+    background: #f5f4f5;
+}
+
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: #5b09fe;
+    box-shadow: 0 0 0 1px rgba(5, 0, 14, 0.5);
+}
+
+.field select {
+    padding: 0 15px;
+    color: #515151;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-top: 1.8rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.checkbox input {
+    width: 18px;
+    height: 18px;
+    accent-color: #5b09fe;
+}

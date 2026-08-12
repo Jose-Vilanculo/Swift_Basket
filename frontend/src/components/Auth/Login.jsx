@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export const LoginForm = (props) => {
-    const navigate = useNavigate()
-    const initialize = props.initialize
+    const navigate = useNavigate();
+    const initialize = props.initialize;
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -53,10 +53,15 @@ export const LoginForm = (props) => {
             )
             
             await initialize();
-            navigate("/");
+
+            // Navigate to where the page was before login, or to home
+            const previous =
+                sessionStorage.getItem("previousPage") || "/";
+
+            navigate(previous, { replace: true });
             
-                    }
-        catch (error) {
+        } catch (error) {
+
             console.error(error.response?.data || error);
 
             // Catch and set DRF error message
@@ -78,8 +83,7 @@ export const LoginForm = (props) => {
                 );
             }
 
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
     };

@@ -12,12 +12,18 @@ import { getAccessToken, isAuthenticated } from "./services/auth"
 import { getGuestCart } from "./services/guest_cart"
 import { ProductPage } from "./pages/ProductPage"
 import { Toaster } from "react-hot-toast"
+import { CheckoutPage } from "./pages/CheckoutPage"
+import { PaymentPage } from "./pages/PaymentPage"
+import { OrdersPage } from "./pages/OrdersPage"
+import { ProtectedRoute } from "./routes/ProtectedRoutes"
+import { RouteTracker } from "./routes/RouteTracker"
 
 function App() {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchCartItems = async (authenticated) => {
 
@@ -32,6 +38,7 @@ function App() {
             }
           );
           setCartItems(response.data);
+          setLoading(false);
           return;
         } catch (error) {
           console.log(error)
@@ -50,8 +57,8 @@ function App() {
               }
           }
       );
-      console.log(response.data.results)
       setCartItems(response.data.results[0]);
+      setLoading(false);
     } catch (error) {
         console.error(error);
     }
@@ -86,6 +93,10 @@ const initialize = async () => {
     <Toaster position="top-right" />
     
     <BrowserRouter>
+
+    {/* Route Tracker to find location after login */}
+    <RouteTracker />
+
     <Navbar
       isCartOpen={isCartOpen}
       setIsCartOpen={setIsCartOpen}
@@ -95,10 +106,20 @@ const initialize = async () => {
       initialize={initialize}
     />
       <Routes>
+        
+        {/* Home Page */}
         <Route path="/" element={<Home />} />
+
+        {/* Login Page */}
         <Route path="/login" element={<Login initialize={initialize}/>} />
+
+        {/* Register Page */}
         <Route path="/register" element={<Register />} />
+
+        {/* Forgot Page */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        {/* Category page */}
         <Route
           path="/products/:category"
           element={
@@ -109,6 +130,8 @@ const initialize = async () => {
             />
           }
         />
+
+        {/* Product Page */}
         <Route
           path="/product/:productSlug"
           element={
@@ -119,6 +142,41 @@ const initialize = async () => {
             />
           }
         />
+
+        {/* Checkout Page */}
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage cartItems={cartItems} loading={loading} />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Payment Page */}
+        <Route
+          path="/secure-payment"
+          element={
+            <ProtectedRoute>
+              <PaymentPage
+                cartItems={cartItems}
+                fetchCartItems={fetchCartItems}
+              />
+            </ProtectedRoute>
+          }>
+        </Route>
+
+        {/* Orders Page */}
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <OrdersPage />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* Not Found Page */}
         <Route path="*" element={<NotFound />} />
         
       </Routes>
