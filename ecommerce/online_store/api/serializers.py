@@ -15,6 +15,8 @@ from online_store.models import (
 )
 from rest_framework import serializers
 from django.db.models import Avg
+from decimal import Decimal
+from datetime import date, timedelta
 
 
 
@@ -333,6 +335,8 @@ class CartSerializer(serializers.ModelSerializer):
 
     subtotal = serializers.SerializerMethodField()
     total_products = serializers.SerializerMethodField()
+    delivery_fee = serializers.SerializerMethodField()
+    estimated_delivery = serializers.SerializerMethodField()
     cartitem_set = CartItemSerializer(many=True)
 
     def get_subtotal(self, obj):
@@ -346,6 +350,12 @@ class CartSerializer(serializers.ModelSerializer):
             item.quantity
             for item in obj.cartitem_set.all()
         )
+
+    def get_delivery_fee(self, obj):
+        return Decimal("80.00")
+
+    def get_estimated_delivery(self, obj):
+        return date.today() + timedelta(days=5)
 
     class Meta:
         model = Cart
@@ -429,16 +439,23 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
 
+    total_products = serializers.SerializerMethodField()
     order_items = OrderItemSerializer(
         read_only=True,
         many=True
     )
 
+    def get_total_products(self, obj):
+            return sum(
+                item.quantity
+                for item in obj.order_items.all()
+            )
+
 
     class Meta:
         model = Order
         fields = "__all__"
-        read_only_fields = ["user", "total_price"]
+        read_only_fields = ["user", "total_price", "delivery_fee"]
 
 
 class ResetTokenSerializer(serializers.ModelSerializer):

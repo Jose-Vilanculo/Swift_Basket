@@ -626,7 +626,7 @@ export const Navbar = (props) => {
                                 <h4>Subtotal ({cartItems.total_products} Items)</h4>
                                 <h4>R {formatPrice(cartItems.subtotal)}</h4>
                             </div>
-                            <a>
+                            <a href="/checkout">
                                 Continue to Checkout
                             </a>
                             </>

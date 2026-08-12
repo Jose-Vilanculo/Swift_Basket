@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.conf import settings
 import uuid
+from datetime import date, timedelta
 
 
 class CustomUser(AbstractUser):
@@ -81,7 +82,10 @@ class Address(models.Model):
         on_delete=models.CASCADE,
         related_name="address"
     )
+    full_name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20)
     street = models.CharField(max_length=255)
+    suburb = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     province = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=20)
@@ -423,8 +427,9 @@ class Order(models.Model):
         on_delete=models.CASCADE
     )
     shipping_full_name = models.CharField(max_length=255)
-    shipping_phone = models.CharField(max_length=20)
+    shipping_phone_number = models.CharField(max_length=20)
     shipping_street = models.CharField(max_length=255)
+    shipping_suburb = models.CharField(max_length=100)
     shipping_city = models.CharField(max_length=100)
     shipping_province = models.CharField(max_length=100)
     shipping_postal_code = models.CharField(max_length=10)
@@ -436,10 +441,20 @@ class Order(models.Model):
         max_digits=10,
         decimal_places=2
     )
+    delivery_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=80.00,
+    )
+    estimated_delivery=date.today() + timedelta(days=5),
     date_created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Order #{self.id} by {self.user}"
+
+    @property
+    def final_price(self):
+        return self.total_price + self.delivery_fee
 
 
 class OrderItem(models.Model):

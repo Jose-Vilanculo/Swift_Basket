@@ -1,5 +1,5 @@
 from rest_framework import viewsets, serializers
-from online_store.models import CartItem, Cart, OrderItem, Order, Address
+from online_store.models import CartItem, Cart, OrderItem, Order
 from online_store.api.serializers import OrderSerializer
 from online_store.api.permissions import IsBuyer
 
@@ -27,22 +27,10 @@ class OrderViewset(viewsets.ModelViewSet):
             total_price += items.product_variant.final_price * items.quantity
 
 
-        #get user address
-        try:
-            address = Address.objects.get(
-                user=self.request.user
-            )
-
-        except Address.DoesNotExist():
-            raise serializers.ValidationError(
-                "User must have a valid address to place an order"
-            )
-
         # create order
         order = serializer.save(
             user=self.request.user,
             total_price=total_price,
-            address=address
         )
 
         # create order items
@@ -62,4 +50,4 @@ class OrderViewset(viewsets.ModelViewSet):
         # Give each user their own orders
         return Order.objects.filter(
             user=self.request.user
-        )
+        ).order_by("-date_created_at")

@@ -195,7 +195,8 @@
 .search-bar {
     display: flex;
     justify-content: center;
-    border: none;
+    border: 6px;
+
 }
 
 form {
@@ -844,6 +845,7 @@ input {
     margin-bottom: 20px;
     border-radius: 10px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 /* ----- Media Queries ----- */

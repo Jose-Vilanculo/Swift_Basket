@@ -1,84 +1,61 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-export const isAuthenticated = async() => {
+export const isAuthenticated = async () => {
+    const accessToken = localStorage.getItem("access_token");
 
-    async function authenticated() {
-
-        const accessToken = localStorage.getItem("access_token")
-
-        if (!accessToken) {
-            console.log("no access token");
-            return false;
-        }
-
-        try {
-        await axios.post(
-                "http://127.0.0.1:8000/api/token/verify/",
-                {
-                    token: accessToken
-                }
-                
-            );
-            console.log("is authenticated");
-            return true;
-
-        } catch (error) {
-            if (error.response?.status === 401) {
-                const refreshed = await refreshAccessToken();
-
-                if (!refreshed) {
-                    return false;
-                }
-
-                console.log("refreshed");
-                // Veryify new access token
-                return await authenticated();
-                
-            }
-
-            console.log("not authenticated");
-            return false;
-        }
+    if (!accessToken) {
+        return false;
     }
 
-    async function refreshAccessToken() {
+    try {
+        const decoded = jwtDecode(accessToken);
 
-        const refreshToken = localStorage.getItem("refresh_token");
-
-        if (!refreshToken) {
-            return false;
+        // Token is still valid
+        if (decoded.exp * 1000 > Date.now()) {
+            return true;
         }
 
-        try {
+        // Token expired, try to refresh
+        return await refreshAccessToken();
+
+    } catch {
+        return false;
+    }
+};
+
+const refreshAccessToken = async () => {
+    const refreshToken = localStorage.getItem("refresh_token");
+
+    if (!refreshToken) {
+        return false;
+    }
+
+    try {
         const response = await axios.post(
-                "http://127.0.0.1:8000/api/token/refresh/",
-                {
-                    refresh: refreshToken,
-                }
-            );
-            
-            localStorage.setItem("access_token", response.data.access)
-
-            if (response.data.refresh) {
-                localStorage.setItem("refresh_token", response.data.refresh)
+            "http://127.0.0.1:8000/api/token/refresh/",
+            {
+                refresh: refreshToken,
             }
+        );
 
-            return true;
+        localStorage.setItem("access_token", response.data.access);
 
-
-        } catch (error) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
-            console.log(error);
-            console.log("not authenticated or refreshed, deleting token...");
-
-            return false
+        if (response.data.refresh) {
+            localStorage.setItem("refresh_token", response.data.refresh);
         }
 
-    }
+        return true;
 
-    return await authenticated()
-}
+    } catch (error) {
+        console.error(error)
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+
+        return false;
+    }
+};
+
 
 export const getAccessToken = () => {
     return localStorage.getItem("access_token");
