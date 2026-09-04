@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from django.conf import settings
 import uuid
 from datetime import date, timedelta
+from decimal import Decimal
 
 
 class CustomUser(AbstractUser):
@@ -175,6 +176,7 @@ class Product(models.Model):
         related_name="products"
     )
     brand = models.CharField(max_length=255, default="generic")
+    is_popular = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -446,7 +448,12 @@ class Order(models.Model):
         decimal_places=2,
         default=80.00,
     )
-    estimated_delivery=date.today() + timedelta(days=5),
+    estimated_delivery=date.today() + timedelta(days=5)
+    pdf = models.FileField(
+        upload_to="invoices/",
+        null=True,
+        blank=True
+    )
     date_created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -454,7 +461,7 @@ class Order(models.Model):
 
     @property
     def final_price(self):
-        return self.total_price + self.delivery_fee
+        return self.total_price + Decimal(str(self.delivery_fee))
 
 
 class OrderItem(models.Model):

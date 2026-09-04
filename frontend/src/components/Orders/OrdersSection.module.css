@@ -1,10 +1,53 @@
 .orderSection {
     width: 100%;
-    height: calc(50vh - 35px);
+    min-height: 100vh;
     margin-top: 70px;
     background-color: white;
 }
 
+/* No orders */
+.noOrderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 25%;
+    margin: auto;
+    padding: 2rem 0;
+    /* border: 1px solid gray; */
+}
+
+.noOrders {
+    width: 70%;
+}
+
+.noOrderContainer h2 {
+    text-align: center;
+    margin: 0;
+    width: 70%;
+    color: #4c4ef5;
+}
+
+.noOrderContainer p {
+    color: rgb(139, 139, 139);
+    text-align: center;
+    width: 60%;
+    margin: 0;
+}
+
+.ordersButton {
+    background-color: #180d81;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    width: 30%;
+    text-align: center;
+}
+
+
+/* Orders */
 .container {
     width: 50%;
     margin: auto;
@@ -27,7 +70,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
+    gap: 1.5rem;
     margin: 5% 0;
 }
 
@@ -302,6 +345,11 @@
     .summary, .summarySide {
         width: 50%;
     }
+
+    /* No orders */
+    .noOrderContainer {
+        width: 100%;
+    }
     
 }
 
@@ -309,13 +357,23 @@
 @media screen and (min-width: 601px) and (max-width: 1100px) {
 
     .container {
-        width: 90%;
+        width: 70%;
+    }
+
+    /* No orders */
+    .noOrderContainer {
+        width: 50%;
     }
 }
 
 
 @media screen and (min-width: 1101px) and (max-width: 1400px) {
     .container {
-        width: 80%;
+        width: 40%;
+    }
+    
+    /* No orders */
+    .noOrderContainer {
+        width: 30%;
     }
 }

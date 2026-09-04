@@ -33,6 +33,17 @@
     gap: 16px;
 }
 
+.invalid {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #dc354634;
+    border: 1px solid red;
+}
+
+.invalid p {
+    margin: 20px;
+}
+
 .authForm h1 {
     margin: 0 0 6px;
 
@@ -216,10 +227,10 @@
 
 .authFooter a {
     margin-left: 4px;
-
     color: #111;
     text-decoration: none;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .authFooter a:hover {

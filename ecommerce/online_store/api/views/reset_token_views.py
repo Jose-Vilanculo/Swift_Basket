@@ -4,6 +4,7 @@ import secrets
 
 import os
 from dotenv import load_dotenv
+from django.conf import settings
 
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
@@ -48,7 +49,7 @@ If you did not request this, you can ignore this email.
     return EmailMessage(
         subject=subject,
         body=body,
-        from_email=os.environ.get('EMAIL_HOST_USER'),
+        from_email=settings.DEFAULT_FROM_EMAIL,
         to=[user.email]
     )
 
@@ -102,11 +103,11 @@ class PasswordResetRequestView(APIView):
 
             token = generate_reset_token(user)
 
-            base_url = os.environ.get('BASE_URL')
+            front_end_url = os.environ.get('FRONTEND_URL')
 
             # frontend reset url
             reset_url = (
-                f"{base_url}reset-password/"
+                f"{front_end_url}/reset-password/"
                 f"{token}"
             )
 
@@ -115,7 +116,11 @@ class PasswordResetRequestView(APIView):
                 reset_url
             )
 
-            email_message.send()
+            try:
+                email_message.send()
+                print("Password reset email sent!")
+            except Exception as e:
+                print("EMAIL ERROR:", e)
 
         except User.DoesNotExist:
 

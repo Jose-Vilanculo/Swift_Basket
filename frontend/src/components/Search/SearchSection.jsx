@@ -1,29 +1,25 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { HiMiniStar, HiOutlineStar } from 'react-icons/hi2';
 import { LiaCartPlusSolid } from 'react-icons/lia';
 import { useNavigate } from 'react-router-dom';
 import { getAccessToken } from '../../services/auth';
 import { formatPrice } from '../../services/formatPrice';
 import { addGuestCartItem } from '../../services/guest_cart';
-import classes from './Products.module.css';
+import classes from '../Categories/Products.module.css';
 
 
-export const Products = (props) => {
+export const SearchSection = (props) => {
 
-    const category = props.category
+    const lookUp = props.lookUp;
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [productCount, setProductCount] = useState(0);
-    const openCart = props.openCart;
+    const setIsCartOpen = props.setIsCartOpen
     const fetchCartItems = props.fetchCartItems;
     const [products, setProducts] = useState([]);
-    const [currentCategory, setCurrentCategory] = useState("");
     const authenticated = props.authenticated
     const navigate = useNavigate();
-    const userChangedPage = useRef(false);
-
-
     
     // Use effect to get products by their categories
     useEffect(() => {
@@ -31,7 +27,7 @@ export const Products = (props) => {
 
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/products/?category=${category}&page=${page}`
+                    `http://127.0.0.1:8000/api/products/?search=${lookUp}&page=${page}`
                 );
 
                 setProducts(response.data.results);
@@ -43,29 +39,10 @@ export const Products = (props) => {
         };
 
         fetchProducts();
-    }, [category, page]);
+    }, [lookUp, page]);
 
-    // Use effect to get categories
-    useEffect(() => {
-        const fetchCategory = async () => {
-
-            try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/categories/?category=${category}`
-                );
-
-                setCurrentCategory(response.data.results[0].name)
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchCategory();
-    }, [category]);
 
     // console.log(products)
-    // console.log(currentCategory);
-
 
     const handleAddItem = async (product) => {
 
@@ -74,13 +51,13 @@ export const Products = (props) => {
             fetchCartItems(authenticated);
             // only open cart if an item is successfully added
             if (response) {
-                openCart();
+                setIsCartOpen(true);
             }
             return;
         }
 
         if (product.product_variant.length > 1) {
-            console.log("select variant")
+            console.log("select variant");
             window.location.href = `/product/${product.slug}`;
         } else {
             try {
@@ -101,7 +78,7 @@ export const Products = (props) => {
                     }
                 );
                 fetchCartItems(authenticated);
-                openCart();
+                setIsCartOpen(true);
                 
                 
                 } catch (error) {
@@ -146,30 +123,13 @@ export const Products = (props) => {
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setPage(1);
-    }, [category]);
-
-
-    // Only scroll to section if the user changes the page
-    const changePage = (newPage) => {
-        userChangedPage.current = true;
-        setPage(newPage);
-    };
-
-    useEffect(() => {
-        if (!userChangedPage.current) return;
-
-        document.getElementById("sub-category-anchor")?.scrollIntoView({
-            behavior: "smooth",
-        });
-
-        userChangedPage.current = false;
-    }, [page]);
+    }, [lookUp]);
 
 
     return (
-        <section className={classes["products-section"]} id="products">
+        <section className={classes["products-section"]}>
             <div className={classes.title}>
-                <h2>All {currentCategory} ({productCount} results)</h2>
+                <h2>Search For: "{lookUp}" ({productCount} results)</h2>
             </div>
             <div className={classes.container}>
                     {products.map((product) => (
@@ -237,9 +197,7 @@ export const Products = (props) => {
 
                     <button
                         disabled={page === 1}
-                        onClick={() => {
-                            changePage(page - 1);
-                        }}
+                        onClick={() => setPage(page - 1)}
                     >
                         Previous
                     </button>
@@ -252,9 +210,7 @@ export const Products = (props) => {
                             <button
                                 key={item}
                                 className={page === item ? classes.active : ""}
-                                onClick={() => {
-                                    changePage(item);
-                                }}
+                                onClick={() => setPage(item)}
                             >
                                 {item}
                             </button>
@@ -263,9 +219,7 @@ export const Products = (props) => {
 
                     <button
                         disabled={page === totalPages}
-                        onClick={() => {
-                            changePage(page + 1);
-                        }}
+                        onClick={() => setPage(page + 1)}
                     >
                         Next
                     </button>

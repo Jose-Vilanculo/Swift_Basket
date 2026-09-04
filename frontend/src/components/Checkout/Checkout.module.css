@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap');
 .checkoutSection {
     width: 100%;
+    min-height: 100vh;
     margin-top: 70px;
     background-color: white;
     font-family: "Inter", sans-serif;

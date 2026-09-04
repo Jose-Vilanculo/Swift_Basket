@@ -5,6 +5,8 @@ import axios from 'axios';
 export const ForgotPasswordForm = () => {
 
     const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [email, setEmail] = useState("");
 
@@ -17,20 +19,40 @@ export const ForgotPasswordForm = () => {
 
         try {
             await axios.post(
-                "http://127.0.0.1:8000/api/forgot-password/",
+                "http://127.0.0.1:8000/api/password-reset/request/",
                 {
                     email,
                 }
             );
 
-            alert(
+            setSuccessMessage(
                 "If an account exists with that email, a reset link has been sent."
-            );
+            )
 
             setEmail("");
         }
         catch (error) {
             console.error(error.response?.data || error);
+
+
+            // Catch and set DRF error message
+            const errors = error.response?.data;
+
+            if (errors) {
+                const firstError = Object.values(errors)[0];
+
+                setSuccessMessage("") // Clear any previous success message
+
+                setErrorMessage(
+                    Array.isArray(firstError)
+                        ? firstError[0]
+                        : firstError
+                );
+            } else {
+                setErrorMessage(
+                    "Something went wrong."
+                );
+            };
         }
         finally {
             setLoading(false);
@@ -45,6 +67,18 @@ export const ForgotPasswordForm = () => {
                     className={classes.authForm}
                     onSubmit={handleSubmit}
                 >
+
+                    {successMessage && (
+                    <div className={classes.successMessage}>
+                        {successMessage}
+                    </div>
+                    )}
+
+                    {errorMessage && (
+                        <div className={classes.errorMessage}>
+                            {errorMessage}
+                        </div>
+                    )}
 
                     <h1>Reset Password</h1>
 

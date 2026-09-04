@@ -175,12 +175,11 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_images(self, obj):
 
         images = obj.images.filter(is_main=False)
-        if images:
-            return ProductImageSerializer(
-                images,
-                many=True,
-                context=self.context
-            ).data
+        return ProductImageSerializer(
+            images,
+            many=True,
+            context=self.context
+        ).data
 
     def get_product_variant(self, obj):
 
@@ -463,3 +462,14 @@ class ResetTokenSerializer(serializers.ModelSerializer):
         model = ResetToken
         fields = ["id", "user", "token", "expiry_date", "used"]
         read_only_fields = ["token"]
+
+
+class ContactSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    email = serializers.EmailField()
+    phone = serializers.CharField(
+        max_length=20,
+        required=False,
+        allow_blank=True
+    )
+    comment = serializers.CharField()

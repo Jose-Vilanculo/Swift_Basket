@@ -14,6 +14,9 @@ from online_store.api.views.order_items_views import OrderItemViewset
 from online_store.api.views.reviews_views import ReviewsViewset
 from online_store.api.views.address_views import AddressViewset
 from online_store.api.views.guest_cart_views import GuestCartView
+from online_store.api.views.popular_products_views import PopularProductsViewSet
+from online_store.api.views.merge_cart_views import MergeCartView
+from online_store.api.views.contact_us import contact
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -47,24 +50,31 @@ router.register(r'order', OrderViewset, basename='order')
 router.register(r'order-items', OrderItemViewset, basename='order-items')
 router.register(r'reviews', ReviewsViewset, basename='reviews')
 router.register(r'address', AddressViewset, basename='address')
+router.register(
+    r'popular-products', PopularProductsViewSet, basename="popular-products"
+)
 
 urlpatterns = [
     path("register/", RegisterView.as_view()),
+
     path(
         "token/",
         TokenObtainPairView.as_view(),
         name="token_obtain_pair"
     ),
+
     path(
         "token/refresh/",
         TokenRefreshView.as_view(),
         name="token_refresh"
     ),
+
     path(
         "token/verify/",
         TokenVerifyView.as_view()
     ),
-        path(
+
+    path(
         "password-reset/request/",
         PasswordResetRequestView.as_view()
     ),
@@ -82,6 +92,14 @@ urlpatterns = [
     path(
         "guest_cart/",
         GuestCartView.as_view()
-    )
+    ),
+    
+    path(
+        "cart/merge/",
+        MergeCartView.as_view(),
+        name="merge-cart",
+    ),
+
+    path("contact/", contact),
 
 ] + router.urls

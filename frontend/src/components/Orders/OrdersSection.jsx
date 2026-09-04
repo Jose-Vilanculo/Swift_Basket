@@ -5,6 +5,7 @@ import { getAccessToken } from '../../services/auth';
 import { FaPlaneDeparture } from 'react-icons/fa';
 import { AiFillFilePdf } from 'react-icons/ai';
 import { formatPrice } from '../../services/formatPrice';
+import noOrdersImage from '../../assets/no-orders.jpg'
 
 
 export const OrdersSection = () => {
@@ -34,10 +35,6 @@ export const OrdersSection = () => {
         fetchOrders();
     }, [])
 
-    if (!orders) {
-        return <div><h2>Loading...</h2></div>;
-    };
-
 
     const getDeliveryDate = (date) => {
         const deliveryDate = new Date(date);
@@ -54,8 +51,55 @@ export const OrdersSection = () => {
         });
     };
 
-    console.log("orders: ");
-    console.log(orders);
+    // console.log("orders: ");
+    // console.log(orders);
+
+
+    // Download the user's invoice for that order
+    const downloadInvoice = async (orderId) => {
+        try {
+            const accessToken = getAccessToken();
+
+            const response = await axios.get(
+                `http://127.0.0.1:8000/api/order/${orderId}/invoice/`,
+                {
+                    responseType: "blob",
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            );
+
+            const url = window.URL.createObjectURL(response.data);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `invoice-${orderId}.pdf`;
+
+            document.body.appendChild(link);
+            link.click();
+
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+    if (orders.length === 0) {
+        return (
+            <section className={classes.orderSection}>
+                <div className={classes.noOrderContainer}>
+                    <img src={noOrdersImage} alt="no orders image" className={classes.noOrders} />
+                    <h2>You havent placed any Orders yet...</h2>
+                    <p>When you have orders, their details will apear here.</p>
+                    <a className={classes.ordersButton} href='/'>Shop Now</a>
+                </div>
+            </section>
+        )
+    };
 
 
     return (
@@ -122,7 +166,7 @@ export const OrdersSection = () => {
 
                                 {/* Right Side */}
                                 <div className={classes.cardRight}>
-                                    <button>
+                                    <button onClick={() => {downloadInvoice(order.id)}}>
                                         <AiFillFilePdf color='white'/>
                                         <p>Invoice</p>
                                     </button>

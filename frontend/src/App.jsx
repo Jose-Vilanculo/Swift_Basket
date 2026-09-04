@@ -17,11 +17,18 @@ import { PaymentPage } from "./pages/PaymentPage"
 import { OrdersPage } from "./pages/OrdersPage"
 import { ProtectedRoute } from "./routes/ProtectedRoutes"
 import { RouteTracker } from "./routes/RouteTracker"
+import { SearchPage } from "./pages/SearchPage"
+import { Footer } from "./components/Footer/Footer"
+import { ScrollToTop } from "./services/ScrollToTop"
+import { ResetPassword } from "./pages/ResetPasswordPage"
 
 function App() {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [isCartVisible, setIsCartVisible] = useState(false);
+  
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -64,17 +71,55 @@ function App() {
     }
   };
 
+
+  const fetchUser = async () => {
+
+      const token = getAccessToken();
+
+      try {
+          const response = await axios.get(
+              "http://127.0.0.1:8000/api/users",
+              {
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                  }
+              }
+          );
+          // console.log(response);
+          setUserProfile(response.data.results[0]);
+      } catch(error) {
+          console.error(error);
+      };
+  }
+
+
+  const openCart = () => {
+      setIsCartVisible(true);
+
+      // Let React render first, then animate in
+      requestAnimationFrame(() => {
+          setIsCartOpen(true);
+      });
+  };
+
+  const closeCart = () => {
+      setIsCartOpen(false);
+  };
+
     
 const initialize = async () => {
     const auth = await isAuthenticated();
 
     setAuthenticated(auth);
 
-    // if (auth) {
-      await fetchCartItems(auth);
-    // } else {
-    //     setCartItems([]);
-    // }
+    if (auth) {
+      await fetchUser();
+    } else {
+      setUserProfile(null);
+    };
+
+    await fetchCartItems(auth);
+
 };
 
 
@@ -90,97 +135,137 @@ const initialize = async () => {
   return (
     <>
 
-    <Toaster position="top-right" />
-    
-    <BrowserRouter>
+      <Toaster position="top-right" />
+      
+      <BrowserRouter>
 
-    {/* Route Tracker to find location after login */}
-    <RouteTracker />
+      {/* Route Tracker to find location after login */}
+      <RouteTracker />
 
-    <Navbar
-      isCartOpen={isCartOpen}
-      setIsCartOpen={setIsCartOpen}
-      fetchCartItems={fetchCartItems}
-      cartItems={cartItems}
-      authenticated={authenticated}
-      initialize={initialize}
-    />
-      <Routes>
-        
-        {/* Home Page */}
-        <Route path="/" element={<Home />} />
+      <Navbar
+        isCartOpen={isCartOpen}
+        setIsCartOpen={setIsCartOpen}
+        isCartVisible={isCartVisible}
+        setIsCartVisible={setIsCartVisible}
+        closeCart={closeCart}
+        openCart={openCart}
+        fetchCartItems={fetchCartItems}
+        cartItems={cartItems}
+        authenticated={authenticated}
+        initialize={initialize}
+        userProfile={userProfile}
+      />
 
-        {/* Login Page */}
-        <Route path="/login" element={<Login initialize={initialize}/>} />
-
-        {/* Register Page */}
-        <Route path="/register" element={<Register />} />
-
-        {/* Forgot Page */}
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-
-        {/* Category page */}
-        <Route
-          path="/products/:category"
-          element={
-            <CategoriesPage
-              setIsCartOpen={setIsCartOpen}
-              fetchCartItems={fetchCartItems}
-              authenticated={authenticated}
-            />
-          }
-        />
-
-        {/* Product Page */}
-        <Route
-          path="/product/:productSlug"
-          element={
-            <ProductPage
-              setIsCartOpen={setIsCartOpen}
-              fetchCartItems={fetchCartItems}
-              authenticated={authenticated}
-            />
-          }
-        />
-
-        {/* Checkout Page */}
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedRoute>
-              <CheckoutPage cartItems={cartItems} loading={loading} />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Payment Page */}
-        <Route
-          path="/secure-payment"
-          element={
-            <ProtectedRoute>
-              <PaymentPage
-                cartItems={cartItems}
+      <ScrollToTop />
+        <Routes>
+          
+          {/* Home Page */}
+          <Route
+            path="/"
+            element={
+              <Home
+                setIsCartOpen={setIsCartOpen}
+                openCart={openCart}
                 fetchCartItems={fetchCartItems}
+                authenticated={authenticated}
               />
-            </ProtectedRoute>
-          }>
-        </Route>
+            }
+          />
 
-        {/* Orders Page */}
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute>
-              <OrdersPage />
-            </ProtectedRoute>
-          } 
-        />
-        
-        {/* Not Found Page */}
-        <Route path="*" element={<NotFound />} />
-        
-      </Routes>
-    </BrowserRouter>
+          {/* Login Page */}
+          <Route path="/login" element={<Login initialize={initialize}/>} />
+
+          {/* Register Page */}
+          <Route path="/register" element={<Register />} />
+
+          {/* Forgot Page */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* Resest Password Page */}
+          <Route
+              path="/reset-password/:token"
+              element={<ResetPassword />}
+          />
+
+          {/* Category page */}
+          <Route
+            path="/products/:category"
+            element={
+              <CategoriesPage
+                openCart={openCart}
+                fetchCartItems={fetchCartItems}
+                authenticated={authenticated}
+              />
+            }
+          />
+
+          {/* Product Page */}
+          <Route
+            path="/product/:productSlug"
+            element={
+              <ProductPage
+                openCart={openCart}
+                fetchCartItems={fetchCartItems}
+                authenticated={authenticated}
+              />
+            }
+          />
+
+          {/* Checkout Page */}
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage cartItems={cartItems} loading={loading} />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Payment Page */}
+          <Route
+            path="/secure-payment"
+            element={
+              <ProtectedRoute>
+                <PaymentPage
+                  cartItems={cartItems}
+                  fetchCartItems={fetchCartItems}
+                />
+              </ProtectedRoute>
+            }>
+          </Route>
+
+          {/* Orders Page */}
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <OrdersPage />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Search Page */}
+          <Route
+            path="/search-products/:lookup"
+            element={
+              <SearchPage
+                setIsCartOpen={setIsCartOpen}
+                fetchCartItems={fetchCartItems}
+                authenticated={authenticated}
+              />
+            }
+          />
+          
+          {/* Not Found Page */}
+          <Route path="*" element={<NotFound />} />
+          
+        </Routes>
+
+          {/* Footer Componenet */}
+        <Footer authenticated={authenticated} initialize={initialize}/>
+      </BrowserRouter>
+
+      
     </>
   )
 }

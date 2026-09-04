@@ -7,11 +7,12 @@ import { Subcategory } from "../components/Categories/Subcategory";
 export const CategoriesPage = (props) => {
 
     const { category } = useParams();
-    // console.log("category:" + category);
 
-    const setIsCartOpen = props.setIsCartOpen;
     const fetchCartItems = props.fetchCartItems;
-    const authenticated = props.authenticated
+    const authenticated = props.authenticated;
+    const openCart = props.openCart;
+
+
     return (
         <>
 
@@ -20,7 +21,7 @@ export const CategoriesPage = (props) => {
             <Subcategory category={category} />
             <Products
                 category={category}
-                setIsCartOpen={setIsCartOpen}
+                openCart={openCart}
                 fetchCartItems={fetchCartItems}
                 authenticated={authenticated}
             />

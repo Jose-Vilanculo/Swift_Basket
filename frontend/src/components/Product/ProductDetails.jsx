@@ -28,7 +28,7 @@ export const ProductDetails = (props) => {
     const descriptionRef = useRef(null);
     const productSlug = props.productSlug;
     const reviewsCount = props.reviewsCount;
-    const setIsCartOpen = props.setIsCartOpen;
+    const openCart = props.openCart;
     const fetchCartItems = props.fetchCartItems;
     const authenticated = props.authenticated;
 
@@ -104,7 +104,7 @@ export const ProductDetails = (props) => {
         if (!authenticated) {
             addToCart(variant.id, quantity);
             fetchCartItems(authenticated);
-            setIsCartOpen(true);
+            openCart();
             return;
         }
 
@@ -123,7 +123,7 @@ export const ProductDetails = (props) => {
                 }
             );
             fetchCartItems(authenticated);
-            setIsCartOpen(true);
+            openCart();
         } catch(error) {
             console.error(error.response.data);
         }
@@ -188,7 +188,11 @@ export const ProductDetails = (props) => {
                                 key={image.id}
                                 src={image.image}
                                 alt=""
-                                onClick={() => emblaApi?.scrollTo(index)}
+                                onClick={() => {
+                                    if (galleryImages.length > 1) {
+                                        emblaApi?.scrollTo(index);
+                                    }
+                                }}
                                 className={
                                     selectedImage === index
                                         ? classes.active
