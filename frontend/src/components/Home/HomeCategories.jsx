@@ -6,8 +6,17 @@ import tech from "../../assets/Home/tech.jpg"
 import homeLiving from "../../assets/Home/homeliving.jpg"
 import fashionHim from "../../assets/Home/fashionhim.jpg"
 import fashionHer from "../../assets/Home/fashionher.png"
+import { PopularProducts } from "./PopularProducts"
+import { useNavigate } from "react-router-dom"
 
-export const HomeCategories = () => {
+export const HomeCategories = (props) => {
+
+    const fetchCartItems = props.fetchCartItems;
+    const authenticated = props.authenticated;
+    const openCart = props.openCart;
+    const navigate = useNavigate();
+
+
     return (
         <section className={classes["category-section"]} id="categories">
             <h2 className={classes.heading}>Shop by Categories</h2>
@@ -15,7 +24,7 @@ export const HomeCategories = () => {
             {/* First category Blocks */}
             <div className={classes.container}>
     
-                <div className={classes["sports-deals"]}>
+                <div className={classes["sports-deals"]} onClick={() => navigate("/products/sportswear")}>
                     <img
                         src={sportsGearImage}
                         alt="A woman running"
@@ -40,7 +49,7 @@ export const HomeCategories = () => {
 
                 <div className={classes["right-container"]}>
 
-                    <div className={classes["gym-equipment"]}>
+                    <div className={classes["gym-equipment"]} onClick={() => navigate("/products/gym-fitness")}>
                         <img
                             src={gymEquipment}
                             alt="Dumbells"
@@ -62,7 +71,7 @@ export const HomeCategories = () => {
                         </div>
                     </div>
 
-                    <div className={classes["tech-deals"]}>
+                    <div className={classes["tech-deals"]} onClick={() => navigate("/products/electronics")}>
                         <img
                             src={tech}
                             alt="Tech gadgets"
@@ -87,9 +96,18 @@ export const HomeCategories = () => {
                 </div>
             </div>
 
+            {/* Popular Products */}
+            <h2 className={classes.heading}>Popular Products</h2>
+            <PopularProducts
+                openCart={openCart}
+                fetchCartItems={fetchCartItems}
+                authenticated={authenticated}
+            />
+
+
             {/* Second category Blocks */}
             <div className={classes["second-container"]}>
-                <div className={classes["home-living"]}>
+                <div className={classes["home-living"]} onClick={() => navigate("/products/home-living")}>
                     <img
                         src={homeLiving}
                         alt="Living space furniture"
@@ -115,7 +133,7 @@ export const HomeCategories = () => {
                 </div>
 
                 <div className={classes["bottom-container"]}>
-                    <div className={classes["mens-fashion"]}>
+                    <div className={classes["mens-fashion"]} onClick={() => navigate("/products/mens-fashion")}>
                         <img
                             src={fashionHim}
                             alt="A man"
@@ -137,7 +155,7 @@ export const HomeCategories = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={classes["womens-fashion"]}>
+                    <div className={classes["womens-fashion"]} onClick={() => navigate("/products/womens-fashion")}>
                         <img
                             src={fashionHer}
                             alt="Two woman"

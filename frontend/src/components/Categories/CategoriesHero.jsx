@@ -45,7 +45,7 @@ export const CategoriesHero = (props) => {
         
         // </section>
 
-        <section
+        <section id='category-hero'
             className={classes.hero}
             style={{ "--bg": `url(${categoryDetails.background_image})` }}
         >
@@ -54,7 +54,7 @@ export const CategoriesHero = (props) => {
                 <div className={classes.content}>
                     <h1>{categoryDetails.name}</h1>
                     <p>{categoryDetails.description}</p>
-                    <a href="#categories">Shop Now</a>
+                    <a href="#products">Shop Now</a>
                 </div>
             </div>
         </div>

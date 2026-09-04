@@ -8,7 +8,7 @@ export const ProductPage = (props) => {
 
     const { productSlug } = useParams();
     const [reviewsCount, setReviews] = useState([]);
-    const setIsCartOpen = props.setIsCartOpen;
+    const openCart = props.openCart;
     const fetchCartItems = props.fetchCartItems;
     const authenticated = props.authenticated;
 
@@ -36,7 +36,7 @@ export const ProductPage = (props) => {
             <ProductDetails
                 productSlug={productSlug}
                 reviewsCount={reviewsCount}
-                setIsCartOpen={setIsCartOpen}
+                openCart={openCart}
                 fetchCartItems={fetchCartItems}
                 authenticated={authenticated}
                 />

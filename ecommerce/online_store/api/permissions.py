@@ -52,6 +52,7 @@ class IsOwnerVendorOrReadOnly(BasePermission):
         # Allow only store owners to edit or delete products
         return request.user == obj.store.owner
     
+    
 class IsProductVariantOwnerVendorOrReadOnly(BasePermission):
     """
         - Anyone can read (GET)

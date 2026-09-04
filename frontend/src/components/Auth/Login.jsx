@@ -1,10 +1,12 @@
 import classes from './Auth.module.css'
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const LoginForm = (props) => {
     const navigate = useNavigate();
+    const location = useLocation();
+
     const initialize = props.initialize;
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
@@ -34,9 +36,30 @@ export const LoginForm = (props) => {
                 formData
             );
 
-            setErrorMessage("") // Clear any previous error message
+            // Merge cart logic
+            const guestCart = JSON.parse(
+                localStorage.getItem("guest_cart") || "[]"
+            );
+            console.log(guestCart);
 
-            console.log(response.data);
+            if (guestCart.length > 0) {
+                await axios.post(
+                    "http://127.0.0.1:8000/api/cart/merge/",
+                    {
+                        items: guestCart
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${response.data.access}`
+                        }
+                    }
+                );
+
+                localStorage.removeItem("guest_cart");
+            }
+
+
+            setErrorMessage("") // Clear any previous error message
 
             // Store access and refresh token for authentication
             localStorage.setItem(
@@ -55,9 +78,7 @@ export const LoginForm = (props) => {
             await initialize();
 
             // Navigate to where the page was before login, or to home
-            const previous =
-                sessionStorage.getItem("previousPage") || "/";
-
+            const previous = location.state?.from?.pathname || "/";
             navigate(previous, { replace: true });
             
         } catch (error) {
@@ -147,7 +168,13 @@ export const LoginForm = (props) => {
 
                         <p className={classes.authFooter}>
                             Don't have an account?
-                            <a href="/register"> Register</a>
+                            <a onClick={() => {
+                                navigate("/register", {
+                                    state: location.state,
+                                });
+                            }}>
+                                Register
+                            </a>
                         </p>
                     </div>
 

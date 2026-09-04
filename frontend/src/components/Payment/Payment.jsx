@@ -21,6 +21,7 @@ export const PaymentSection = (props) => {
 
     const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
+    const [processing, setProcessing] = useState(false);
 
     const address = JSON.parse(
         localStorage.getItem("checkout_address")
@@ -62,6 +63,9 @@ export const PaymentSection = (props) => {
 
     const handlePay = async() => {
         setLoading(true);
+        
+        // Avoid clicking pay now twice
+        setProcessing(true);
 
         const token = getAccessToken();
 
@@ -76,14 +80,15 @@ export const PaymentSection = (props) => {
                 }
             );
             setOrder(response.data);
+            setLoading(false);
         } catch(error) {
             console.error(error);
+            setProcessing(false);
         }
 
         setTimeout(() => {
             fetchCartItems();
             setSuccess(true);
-            setLoading(false);
         }, 2000);
     }
 
@@ -267,6 +272,7 @@ export const PaymentSection = (props) => {
                     {/* Payment button */}
                     <button
                         className={classes.payment}
+                        disabled={processing}
                         onClick={handlePay}
                     >
                         <p>Pay Now</p>

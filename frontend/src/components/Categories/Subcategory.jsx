@@ -28,33 +28,39 @@ export const Subcategory = (props) => {
     }, [category]);
 
     return (
-        <section
-            // Only show this section on parent categories
-            className={
-                subcategory.length > 0
-                ?classes["sub-category-section"]
-                :classes.hidden
-            }
-        >
-            <div className={classes.container}>
-                {subcategory.map((category, key) => (
-                    <a
-                        className={classes.cards}
-                        href={`/products/${category.slug}`}
-                        key={key}
-                    >
-                        <img src={category.icon} alt="category icons" />
-                        <div className={classes.text}>
-                            <h4>{category.name}</h4>
-                            <div className={classes.discover}>
-                            <p>Discover</p>
-                            <IoIosArrowForward size={15} className={classes.arrow}/>
-                            </div>
-                        </div>
-                    </a>
-                ))}
-            </div>
+        <>
+        
+            {/* target for my scroll to reach this page whether the sub-category is rendered or not */}
+            <div id="sub-category-anchor" className={classes.anchor} />
 
-        </section>
+            <section id='sub-category'
+                // Only show this section on parent categories
+                className={
+                    subcategory.length > 0
+                    ?classes["sub-category-section"]
+                    :classes.hidden
+                }
+            >
+                <div className={classes.container}>
+                    {subcategory.map((category, key) => (
+                        <a
+                            className={classes.cards}
+                            href={`/products/${category.slug}`}
+                            key={key}
+                        >
+                            <img src={category.icon} alt="category icons" />
+                            <div className={classes.text}>
+                                <h4>{category.name}</h4>
+                                <div className={classes.discover}>
+                                <p>Discover</p>
+                                <IoIosArrowForward size={15} className={classes.arrow}/>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+
+            </section>
+        </>
     )
 }

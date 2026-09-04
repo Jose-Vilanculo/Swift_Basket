@@ -1,0 +1,164 @@
+footer {
+    width: 100%;
+    padding-top: 50px;
+    background-color: black;
+    border-top: 1px solid rgba(104, 104, 104, 0.3);
+}
+
+.upper-footer {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10% 0 10%;
+}
+
+.left-section {
+    display: inline-flex;
+    flex-direction: column;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+}
+
+.logo {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.logo-link {
+    text-decoration: none;
+    color: inherit;
+    z-index: 10;
+}
+
+.logo-text {
+    margin: 0;
+    font-size: 1.8rem;
+    font-family: "Julius Sans One", sans-serif;
+    font-weight: 100;
+    color: white;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.left-section p {
+    font-size: 0.9rem;
+}
+
+.middle-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.heading4 {
+    color: white;
+    margin: 0 0 0.5rem;
+}
+
+.links {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.8rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.right-section {
+    display: flex;
+    gap: 10rem;
+}
+
+.sm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+}
+
+.card p {
+    margin: 0;
+}
+
+.icon {
+    margin-right: 15px;
+    color: rgba(255, 255, 255, 0.8);
+
+}
+
+.lower-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+    height: 100px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dash {
+    width: 80%;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.copy {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.name {
+    color: white;
+    font-weight: 500;
+}
+
+/* ----- Media Queries ----- */
+@media screen and (max-width: 700px) {
+
+    .upper-footer {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 50px 20px;
+    }
+    .left-section {
+        flex: 0 0 100%;
+    }
+
+    .middle-section {
+        flex: 1;
+    }
+    .right-section {
+        margin-top: 20px;
+        gap: 5rem;
+    }
+
+    .copy {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-top: 3px solid rgba(255, 255, 255, 0.3);
+    }
+    .dash {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 701px) and (max-width: 950px) {
+    .upper-footer {
+        margin: 0 5% 0 5%;
+    }
+    .dash, .copy{
+        width: 90%;
+    }
+}

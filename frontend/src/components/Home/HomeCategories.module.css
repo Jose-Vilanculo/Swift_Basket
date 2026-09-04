@@ -24,6 +24,7 @@
     flex-direction: row;
     gap: 15px;
     justify-content: center;
+    margin-bottom: 2rem;
 }
 
 .text{
@@ -67,21 +68,31 @@
     cursor: pointer;
 }
 
-.img-overlay a{
+
+.img-overlay a {
     position: absolute;
     margin-left: 70px;
     bottom: 10%;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
-    color: white;
+    color: rgb(233, 231, 231);
     text-decoration: none;
+    font-size: 0.85rem;
+
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
 }
 
-.image{
+.image {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
+
+    transition: transform 0.4s ease;
 }
 
 .right-container{
@@ -164,6 +175,37 @@
     width: 100%;
     height: calc(50% - 7.5px)
 }
+
+/* transition effects */
+.sports-deals,
+.gym-equipment,
+.tech-deals,
+.home-living,
+.mens-fashion,
+.womens-fashion {
+    position: relative;
+    overflow: hidden;
+}
+
+.sports-deals:hover .image,
+.gym-equipment:hover .image,
+.tech-deals:hover .image,
+.home-living:hover .image,
+.mens-fashion:hover .image,
+.womens-fashion:hover .image {
+    transform: scale(1.08);
+}
+
+.sports-deals:hover .img-overlay a,
+.gym-equipment:hover .img-overlay a,
+.tech-deals:hover .img-overlay a,
+.home-living:hover .img-overlay a,
+.mens-fashion:hover .img-overlay a,
+.womens-fashion:hover .img-overlay a {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 /* ----- Second Container ----- */
 .second-container{

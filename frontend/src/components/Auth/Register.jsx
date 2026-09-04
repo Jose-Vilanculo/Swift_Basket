@@ -1,10 +1,12 @@
 import classes from './Auth.module.css'
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 export const RegisterForm = () => {
 
+    const navigate = useNavigate();
     const [profileImage, setProfileImage] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -67,6 +69,9 @@ export const RegisterForm = () => {
             setSuccessMessage(
                 "Account created successfully! Redirecting..."
             );
+            navigate("/login", {
+                state: location.state,
+            });
 
             // Clear form data
             setFormData({
@@ -156,7 +161,7 @@ export const RegisterForm = () => {
                         <select name="role" value={formData.role} onChange={handleChange} required>
                             <option value="">Select Role *</option>
                             <option value="buyer">Buyer</option>
-                            <option value="vendor">Vendor</option>
+                            {/* <option value="vendor">Vendor</option> */}
                         </select>
 
                         <select name="gender" value={formData.gender} onChange={handleChange} required>
@@ -196,7 +201,13 @@ export const RegisterForm = () => {
 
                     <p className={classes.authFooter}>
                         Already have an account?
-                        <a href="/login"> Login</a>
+                        <a onClick={() => {
+                            navigate("/login", {
+                                state: location.state,
+                            });
+                        }}>
+                            Login
+                        </a>
                     </p>
 
                 </form>

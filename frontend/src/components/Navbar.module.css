@@ -28,6 +28,7 @@
     text-decoration: none;
     color: inherit;
     z-index: 50;
+    cursor: pointer;
 }
 
 .logo-text {
@@ -58,6 +59,7 @@
     text-decoration: none;
     color: rgba(0, 0, 0, 1);
     font-weight: 500;
+    cursor: pointer;
 }
 
 .nav-text::after {
@@ -192,11 +194,12 @@
     height: 35px;
 }
 
-.search-bar {
+.search-bar-desktop {
     display: flex;
     justify-content: center;
     border: 6px;
-
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 form {
@@ -226,7 +229,7 @@ input {
     font-size: 12px;
 }
 
-.search-bar button {
+.search-bar-desktop button {
     position: absolute;
     right: 0px;
     top: 50%;
@@ -297,7 +300,7 @@ input {
     display: none;
 }
 
-.user-image{
+.user-image {
     position: absolute;
     left: 0;
     top: 50%;
@@ -305,15 +308,38 @@ input {
 
     width: 40px;
     height: 40px;
-    border-radius: 50px;
+    border-radius: 50%;
     background-color: rgb(146, 146, 146);
     border: 1px solid black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.image{
-    position: absolute;
-    left: 22%;
-    top: 23%;
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+}
+
+.letter h3 {
+    margin: 0;
+    line-height: 1;
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 .user-cart {
@@ -366,6 +392,8 @@ input {
     background: rgba(210, 210, 210, 0.5);
 }
 
+
+/* Cart */
 .cart {
     position: relative;
     color: rgba(255, 255, 255, 1);
@@ -383,36 +411,48 @@ input {
     
 }
 
-.counter{
-    display: flex ;
-    width: 20px;
-    height: 20px;
+.counter {
     position: absolute;
     left: 30px;
     top: 25%;
     transform: translateY(-50%);
-    font-size: 0.7rem;
-    background-color: black;
-    border-radius: 50px;
-    border: 1px solid white;
-    text-align: center;
+
+    width: 20px;
+    height: 20px;
+
+    display: flex;
     justify-content: center;
+    align-items: center;
+
+    font-size: 0.7rem;
+    font-weight: 600;
+
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 50%;
 }
 
-.number{
-    position: absolute;
-    top: 5%;
-    left: 37%;
+.number {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
 }
 
 /* Sliding Cart */
 
 /* ----- Mobile Nav Styles -----*/
 
+
+
 .menu-overlay {
     position: fixed;
     top: 70px;
     left: 0;
+    pointer-events: none;
+
+    display: flex;
+    flex-direction: column;
 
     width: 100%;
     height: calc(100vh - 70px);
@@ -421,6 +461,15 @@ input {
 
     background: black;
     z-index: 50;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.menu-overlay.open {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .no-scroll {
@@ -434,14 +483,28 @@ input {
     text-align: flex-start;
     flex-direction: column;
     line-height: 2.5;
-    width: 100%;    
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 80%;
+    max-width: 350px;
+    height: 100%;
+}
+
+.mobile-nav-text:first-of-type {
+    border-top: 1px solid grey;
+}
+.mobile-nav-text:last-of-type {
+    border-bottom: none
 }
 
 .mobile-nav-text {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 1.4rem;
-    padding: 5px 5px 0px 30px;
+    font-size: 1.3rem;
+    padding: 12px 5px 12px 30px;
     border-bottom: 1px solid grey;
 }
 
@@ -461,31 +524,46 @@ input {
 }
 
 /* Mobile search bar */
-.search-bar {
+.menu-overlay .search-bar {
     display: flex;
     justify-content: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    align-items: center;
+    padding: 20px 0;
 }
 
-
-.mobile-nav-items .input-wrapper {
+.search-bar .input-wrapper {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: auto;
     width: 90%;
     max-width: 500px;
+    margin: auto;
 }
 
-.mobile-nav-items input {
+.search-bar input {
     height: 35px;
     font-size: 1rem;
 }
 
-.mobile-nav-items button {
+
+
+.search-bar button {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+
     height: 37px;
     width: 37px;
+
+    border: none;
+    border-radius: 50%;
+    background: black;
+    color: white;
+    cursor: pointer;
+
     border: 1px solid white;
 }
 
@@ -518,7 +596,7 @@ input {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.8);
     font-size: 1.2rem;
-    padding: 5px 5px 0px 30px;
+    padding: 10px 5px 10px 30px;
     margin-left: 25px;
     flex: 1;
 }
@@ -550,40 +628,48 @@ input {
 .mobile-subcategory {
     text-decoration: none;
     color: rgba(155, 155, 155, 1);
-
+    font-size: 1.2rem;
     padding: 10px 5px 5px 55px;
     margin-left: 25px;
     border-bottom: 1px solid rgba(128, 128, 128, 0.3);
 }
 
+
 /* Cart Overlay Styles */
 .cart-overlay {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: fixed;
+    inset: 0;
 
-    width: 100%;
-    height: 100vh;
-
-    overflow-y: auto;
-
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0);
+    opacity: 0;
+    transition: opacity 0.35s ease;
 
     z-index: 40;
 }
 
+.cart-overlay.open {
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 1;
+}
+
 .cart-slider {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
 
-    width: 100%;
+    width: 420px;
+    max-width: 100%;
     height: 100vh;
-
-    overflow-y: auto;
 
     background: white;
     z-index: 50;
+
+    transform: translateX(100%);
+    transition: transform 0.35s ease;
+}
+
+.cart-slider.open {
+    transform: translateX(0);
 }
 
 .cart-header {
@@ -854,11 +940,11 @@ input {
 @media screen and (max-width: 1150px) {
 
     .logo {
-    position: absolute;
-    left: 9%;
-    top: 25%;
-    padding-left: 0;
-    margin-left: 10px;
+        position: absolute;
+        left: 9%;
+        top: 25%;
+        padding-left: 0;
+        margin-left: 10px;
     }
 
     .nav-items {
@@ -914,6 +1000,9 @@ input {
 
     .no-user {
         display: none;
+    }
+    .letter h3 {
+        font-size: 1rem;
     }
 }
 

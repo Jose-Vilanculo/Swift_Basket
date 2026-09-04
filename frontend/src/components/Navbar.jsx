@@ -20,21 +20,29 @@ const navItems = [
 
 export const Navbar = (props) => {
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
     const [openCategory, setOpenCategory] = useState(null);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
 
+    const userProfile = props.userProfile;
     const isCartOpen = props.isCartOpen;
     const setIsCartOpen = props.setIsCartOpen;
+    const isCartVisible = props.isCartVisible
+    const setIsCartVisible = props.setIsCartVisible
+    const openCart = props.openCart;
+    const closeCart = props.closeCart;
     const fetchCartItems = props.fetchCartItems;
     const cartItems = props.cartItems;
-    const authenticated = props.authenticated
-    const initialize = props.initialize
+    const authenticated = props.authenticated;
+    const initialize = props.initialize;
 
     
-
     // Use effect to get categories
     useEffect(() => {
         const fetchCategories = async () => {
@@ -52,10 +60,6 @@ export const Navbar = (props) => {
         fetchCategories();
         // console.log(getAccessToken())
     }, []);
-
-
-    // console.log(cartItems);
-    // console.log(cartItems.cartitem_set)
 
 
     /* useEffect to lock scrolling while menu is open */
@@ -95,16 +99,15 @@ export const Navbar = (props) => {
         };
     }, [isCartOpen]);
 
+
     // Handling logging out
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const handleLogIn = async() => {
         if (authenticated) {
             await initialize();
-        }
+        };
         navigate("/login");
-        }
+        };
 
     const handleLogout = () => {
         logout();
@@ -117,8 +120,8 @@ export const Navbar = (props) => {
         }
     }
 
-    const menuRef = useRef(null);
 
+    const menuRef = useRef(null);
     // Use Effect to close the user menu when you click on the page
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -140,6 +143,7 @@ export const Navbar = (props) => {
         };
     }, []);
 
+
     const updateQuantity = async (cartItemId, quantity, GuestItemId) => {
 
         console.log(GuestItemId + quantity);
@@ -149,24 +153,25 @@ export const Navbar = (props) => {
             return;
         }
 
-    try {
-        const accessToken = getAccessToken();
+        try {
+            const accessToken = getAccessToken();
 
-        await axios.patch(
-            `http://127.0.0.1:8000/api/cart-items/${cartItemId}/`,
-            { "quantity": quantity },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
+            await axios.patch(
+                `http://127.0.0.1:8000/api/cart-items/${cartItemId}/`,
+                { "quantity": quantity },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
                 }
-            }
-        );
+            );
 
-        fetchCartItems(authenticated);
-    } catch (error) {
-        console.error(error);
-    }
-};
+            fetchCartItems(authenticated);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     const deleteButton = async (cartItemId, variantId) => {
 
@@ -195,6 +200,29 @@ export const Navbar = (props) => {
     };
 
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsMenuOpen();
+
+        if (!searchValue.trim()) return;
+
+        navigate(`/search-products/${searchValue}`);
+    };
+
+
+    const goToSection = (id) => {
+        if (location.pathname === "/") {
+            document.getElementById(id)?.scrollIntoView({
+                behavior: "smooth",
+            });
+        } else {
+            navigate("/", {
+                state: { scrollTo: id },
+            });
+        }
+    };
+
+
     return (
         <nav className={classes.navbar}>
 
@@ -207,7 +235,7 @@ export const Navbar = (props) => {
             </button>
             
             {/* Nav Logo */}
-            <a href="#hero" className={classes["logo-link"]}>
+            <a onClick={() => goToSection("hero")} className={classes["logo-link"]}>
                 <div className={classes.logo}>
                     <h1 className={classes["logo-text"]}>Swift Basket</h1>
                 </div>
@@ -215,11 +243,11 @@ export const Navbar = (props) => {
 
             {/* Desktop Nav */}
             <div className={classes["nav-items"]}>
-                <a href="/" className={classes["nav-text"]}>
+                <a onClick={() => goToSection("hero")} className={classes["nav-text"]}>
                     Home
                 </a>
 
-                <a href="#contact" className={classes["nav-text"]}>
+                <a onClick={() => goToSection("contact")} className={classes["nav-text"]}>
                     Contact Us
                 </a>
 
@@ -277,16 +305,19 @@ export const Navbar = (props) => {
                 </div>
                 
                 {/* Search Bar */}
-                <div className={classes["search-bar"]}>
-                    <form action="/search" method="GET">
+                <div className={classes["search-bar-desktop"]}>
+                    <form onSubmit={handleSubmit}>
                         <div className={classes["input-wrapper"]}>
                             <input
                                 type="text"
-                                name="q"
+                                name="search"
+                                required
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
                                 placeholder="Search products..."
                             />
 
-                            <button type="submit">
+                            <button>
                                 <Search size={15}/>
                             </button>
                         </div>
@@ -324,12 +355,6 @@ export const Navbar = (props) => {
                     >
                         {isUserMenuOpen && (
                             <div className={classes["user-menu"]}>
-                                <a
-                                    href="/profile"
-                                    className={classes["user-menu-item"]}
-                                >
-                                    Manage Profile
-                                </a>
 
                                 <a
                                     href="/orders"
@@ -357,7 +382,17 @@ export const Navbar = (props) => {
                         </div>
                         <div className={classes["user-image"]}>
                             <div className={classes.image}>
-                                <PiUserLight size={20} />
+                                {
+                                    userProfile
+                                        ? ( 
+                                            <div className={classes.letter}>
+                                                <h3>{userProfile.username[0]}</h3>
+                                            </div>
+                                        ):(
+                                            <PiUserLight size={20} />
+                                        )
+                                }
+                                
                             </div>
                         </div>
                     </div>
@@ -367,7 +402,7 @@ export const Navbar = (props) => {
                 { /* Cart */}
                 <div
                     className={classes.cart}
-                    onClick={() => setIsCartOpen((prev) => !prev)}
+                    onClick={openCart}
                 >
                     <div className={classes.basket}>
                         <CiShoppingBasket size={25}/>
@@ -383,144 +418,157 @@ export const Navbar = (props) => {
 
             {/* Mobile Nav */}
 
-            {isMenuOpen && (
-                <div className={classes["menu-overlay"]}>
+                <div
+                    className={`${classes["menu-overlay"]} ${
+                        isMenuOpen ? classes.open : ""
+                    }`}
+                >
+                    {/* Search Bar */}
+                    <div className={classes["search-bar"]}>
+                        <form onSubmit={handleSubmit}>
+                            <div className={classes["input-wrapper"]}>
+                                <input
+                                    type="text"
+                                    name="search"
+                                    required
+                                    value={searchValue}
+                                    onChange={(e) => setSearchValue(e.target.value)}
+                                    placeholder="Search products..."
+                                />
 
-                    <div className={classes["mobile-nav-items"]}>
+                                <button>
+                                    <Search size={15}/>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-                        {/* Search Bar */}
-                        <div className={classes["search-bar"]}>
-                            <form action="/search" method="GET">
-                                <div className={classes["input-wrapper"]}>
-                                    <input
-                                        type="text"
-                                        name="q"
-                                        placeholder="Search products..."
-                                    />
-
-                                    <button type="submit">
-                                        <Search size={15}/>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        {/* Mobile Categories */}
-                        {navItems.map((item, key) => {
-                            if (item.name === "Categories") {
-                                return (
-                                    <div key={key} className={classes["mobile-category-container"]}>
-                                        <div
-                                            className={classes["mobile-nav-text"]}
-                                            onClick={() => setIsCategoriesOpen((prev) => !prev)}
-                                        >
-                                            Categories
-                                        </div>
-
-                                        {isCategoriesOpen && (
-                                            <div className={classes["mobile-categories"]}>
-                                                {categories.map((category) => {
-                                                    // console.log(
-                                                    //     category.name,
-                                                    //     category.subcategories
-                                                    // );
-                                                    return (
-                                                        <div
-                                                            key={category.id}
-                                                            className={classes["mobile-category"]}
-                                                        >
-                                                            <div
-                                                                className={classes["mobile-category-header"]}
-                                                            >
-                                                                <a
-                                                                    href={`/products/${category.slug}`}
-                                                                    className={classes["mobile-category-link"]}
-                                                                >
-                                                                    {category.name}
-                                                                </a>
-
-                                                                {category.subcategories?.length > 0 && (
-                                                                    <button
-                                                                        className={classes["expand-button"]}
-                                                                        onClick={(e) => {
-
-                                                                            e.preventDefault();
-                                                                            e.stopPropagation();
-
-                                                                            setOpenCategory(
-                                                                                openCategory === category.id
-                                                                                    ? null
-                                                                                    : category.id
-                                                                            )
-                                                                        }}
-                                                                    >
-                                                                        {openCategory === category.id ? "−" : "+"}
-                                                                    </button>
-                                                                )}
-                                                            </div>
-
-                                                            {openCategory === category.id &&
-                                                                category.subcategories?.length > 0 && (
-                                                                    <div
-                                                                        className={
-                                                                            classes["mobile-subcategories"]
-                                                                        }
-                                                                    >
-                                                                        {category.subcategories.map(
-                                                                            (subcategory) => (
-                                                                                <a
-                                                                                    key={subcategory.id}
-                                                                                    href={`/products/${subcategory.slug}`}
-                                                                                    className={
-                                                                                        classes["mobile-subcategory"]
-                                                                                    }
-                                                                                >
-                                                                                    {subcategory.name}
-                                                                                </a>
-                                                                            )
-                                                                        )}
-                                                                    </div>
-                                                                )}
-                                                        </div>
-                                                    );
-                                                })}
-                                                </div>
-                                        )}
-                                    </div>
-                                );
-                            }
-
+                    {/* Mobile Categories */}
+                    {navItems.map((item, key) => {
+                        if (item.name === "Categories") {
                             return (
-                                <a
-                                    key={key}
-                                    href={item.href}
-                                    className={classes['mobile-nav-text']}
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    {item.name}
-                                </a>
+                                <div key={key} className={classes["mobile-category-container"]}>
+                                    <div
+                                        className={classes["mobile-nav-text"]}
+                                        onClick={() => setIsCategoriesOpen((prev) => !prev)}
+                                    >
+                                        Categories
+                                    </div>
+
+                                    {isCategoriesOpen && (
+                                        <div className={classes["mobile-categories"]}>
+                                            {categories.map((category) => {
+                                                // console.log(
+                                                //     category.name,
+                                                //     category.subcategories
+                                                // );
+                                                return (
+                                                    <div
+                                                        key={category.id}
+                                                        className={classes["mobile-category"]}
+                                                    >
+                                                        <div
+                                                            className={classes["mobile-category-header"]}
+                                                        >
+                                                            <a
+                                                                href={`/products/${category.slug}`}
+                                                                className={classes["mobile-category-link"]}
+                                                            >
+                                                                {category.name}
+                                                            </a>
+
+                                                            {category.subcategories?.length > 0 && (
+                                                                <button
+                                                                    className={classes["expand-button"]}
+                                                                    onClick={(e) => {
+
+                                                                        e.preventDefault();
+                                                                        e.stopPropagation();
+
+                                                                        setOpenCategory(
+                                                                            openCategory === category.id
+                                                                                ? null
+                                                                                : category.id
+                                                                        )
+                                                                    }}
+                                                                >
+                                                                    {openCategory === category.id ? "−" : "+"}
+                                                                </button>
+                                                            )}
+                                                        </div>
+
+                                                        {openCategory === category.id &&
+                                                            category.subcategories?.length > 0 && (
+                                                                <div
+                                                                    className={
+                                                                        classes["mobile-subcategories"]
+                                                                    }
+                                                                >
+                                                                    {category.subcategories.map(
+                                                                        (subcategory) => (
+                                                                            <a
+                                                                                key={subcategory.id}
+                                                                                href={`/products/${subcategory.slug}`}
+                                                                                className={
+                                                                                    classes["mobile-subcategory"]
+                                                                                }
+                                                                            >
+                                                                                {subcategory.name}
+                                                                            </a>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                    </div>
+                                                );
+                                            })}
+                                            </div>
+                                    )}
+                                </div>
                             );
-                        })}
+                        }
+
+                        // Home and Contact Us
+                        return (
+                            <a
+                                key={key}
+                                href={item.href}
+                                className={classes['mobile-nav-text']}
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                {item.name}
+                            </a>
+                        );
+                    })}
 
                     </div>
-                </div>)
-            }
 
             {/* Cart Overlay*/}
-            {isCartOpen && (
+            {isCartVisible && (
                 <>
                 <div
-                    className={classes["cart-overlay"] }
-                    onClick={() => setIsCartOpen((prev) => !prev)}
+                    className={`${classes["cart-overlay"]} ${
+                        isCartOpen ? classes.open : ""
+                    }`}
+                    onClick={closeCart}
+                />
+
+                {/* Cart Slider */}
+                <div
+                    className={`${classes["cart-slider"]} ${
+                        isCartOpen ? classes.open : ""
+                    }`}
+                    onTransitionEnd={() => {
+                        if (!isCartOpen) {
+                            setIsCartVisible(false);
+                        }
+                    }}
                 >
-                </div>
-                {/* Sliding Cart */}
-                <div className={classes["cart-slider"]}>
                     {/* Top Heading and Button */}
                     <div className={classes["cart-header"]}>
                         <h2>Your Shopping <span className={classes.bag}>Bag</span></h2>
                         <X
-                            onClick={() => setIsCartOpen((prev) => !prev)}
+                            onClick={closeCart}
                             size={30}
                             className={classes["cart-x-button"]}
                         />
@@ -613,7 +661,6 @@ export const Navbar = (props) => {
                                     </div>
                                     
                                 ))
-                            
                         }
 
                     </div>

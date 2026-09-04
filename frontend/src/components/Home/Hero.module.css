@@ -33,6 +33,7 @@
     font-size: 3rem;
     margin: 0;
     letter-spacing: -1px;
+    animation-delay: 0.1s;
 }
 
 .content h1 {
@@ -42,6 +43,7 @@
     margin: -0.5rem 0 -0.5rem;
     font-weight: 700;
     letter-spacing: -4px;
+    animation-delay: 0.3s;
 }
 
 .content p {
@@ -50,6 +52,7 @@
     line-height: 1.2;
     margin-bottom: 2.5rem;
     margin-right: 150px;
+    animation-delay: 0.5s;
 }
 
 .content a {
@@ -68,6 +71,28 @@
 
     cursor: pointer;
     text-decoration: none;
+
+    animation-delay: 0.7s;
+}
+
+.content h2,
+.content h1,
+.content p,
+.content a {
+    opacity: 0;
+    transform: translateY(-30px);
+    animation: slideDown 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .imageSection {

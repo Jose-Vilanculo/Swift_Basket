@@ -9,7 +9,7 @@ from online_store.api.pagination import ProductPagination
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsOwnerVendorOrReadOnly]
-    http_method_names = ["get", "post", "patch", "delete"]
+    http_method_names = ["get", "post", "patch", "delete", "put"]
     pagination_class = ProductPagination
 
 
