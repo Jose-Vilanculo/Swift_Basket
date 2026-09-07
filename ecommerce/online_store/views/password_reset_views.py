@@ -1,4 +1,5 @@
 import secrets
+import os
 from online_store.models import ResetToken
 from django.contrib.auth import get_user_model
 from django.contrib import messages
@@ -6,9 +7,11 @@ from django.core.mail import EmailMessage
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect
 from hashlib import sha1
+from dotenv import load_dotenv
 
 
 User = get_user_model()
+load_dotenv()
 
 # ---email---
 
@@ -51,7 +54,7 @@ def generate_reset_url(user):
     Returns:
         A full reset URL containing a secure token.
     """
-    domain = "http://127.0.0.1:8000/"
+    domain = os.environ.get('BASE_URL')
     app_name = "swift_basket"
     url = f"{domain}{app_name}/reset_password/"
     token = str(secrets.token_urlsafe(16))

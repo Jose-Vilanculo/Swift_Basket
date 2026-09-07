@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
@@ -27,10 +28,47 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# ENV detection: local vs production
+ENV = os.environ.get("ENV", "development")  # Set ENV=production on Railway
 
-ALLOWED_HOSTS = []
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = ENV != "production"
+
+
+# Allowed hosts
+if ENV == "production":
+    ALLOWED_HOSTS = [os.environ.get("RAILWAY_PUBLIC_DOMAIN")]
+else:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+# SSL & CSRF settings
+if ENV == "production":
+    SECURE_SSL_REDIRECT = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SAMESITE = "Lax"
+
+
+    # Proxy headers for Railway HTTPS
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST = True
+else:
+    # Local development (HTTP)
+    SECURE_SSL_REDIRECT = False
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+
+# CSRF trusted origins (only required in production)
+CSRF_TRUSTED_ORIGINS = []
+
+if ENV == "production":
+    CSRF_TRUSTED_ORIGINS = [
+        f"https://{os.environ.get('RAILWAY_PUBLIC_DOMAIN')}",
+        os.environ.get('VERCEL_FRONTEND'),
+    ]
+
 
 
 # Application definition
@@ -49,6 +87,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
@@ -59,8 +98,13 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    os.environ.get("FRONTEND_URL"),
 ]
+
+if ENV == "production":
+    CORS_ALLOWED_ORIGINS += [
+        os.environ.get('VERCEL_FRONTEND')
+    ]
 
 ROOT_URLCONF = 'ecommerce.urls'
 
@@ -86,29 +130,23 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'store_db'),
-        'USER': os.environ.get('DB_USER', 'store_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'store_password'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
+if ENV == "production":
+    # Railway PostgreSQL DB
+    DATABASES = {
+        "default": dj_database_url.parse(
+            os.environ.get("DATABASE_URL"),
+            conn_max_age=600,
+        )
     }
-}
-"""
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+else:
+    # Local SQLite  DB
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+    
 
 
 # Password validation
@@ -151,7 +189,7 @@ SIMPLE_JWT = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Johannesburg'
 
 USE_I18N = True
 
@@ -167,10 +205,13 @@ STATICFILES_DIRS = [
     BASE_DIR / "online_store/static",
 ]
 
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 
 # Default primary key field type
@@ -183,8 +224,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True").lower() == "true"
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')   # <-- Replace with actual email
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')   # <-- Replace with actual app password
