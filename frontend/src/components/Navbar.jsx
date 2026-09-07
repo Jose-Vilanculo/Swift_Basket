@@ -1,4 +1,5 @@
 import axios from 'axios';
+import API_URL from "../services/api"
 import { Menu, Search, Trash2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { CiShoppingBasket } from 'react-icons/ci';
@@ -48,7 +49,7 @@ export const Navbar = (props) => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get(
-                    "http://127.0.0.1:8000/api/categories/"
+                    `${API_URL}/api/categories/`
                 );
 
                 setCategories(response.data.results);
@@ -157,7 +158,7 @@ export const Navbar = (props) => {
             const accessToken = getAccessToken();
 
             await axios.patch(
-                `http://127.0.0.1:8000/api/cart-items/${cartItemId}/`,
+                `${API_URL}/api/cart-items/${cartItemId}/`,
                 { "quantity": quantity },
                 {
                     headers: {
@@ -185,7 +186,7 @@ export const Navbar = (props) => {
             const accessToken = getAccessToken()
 
             await axios.delete(
-                `http://127.0.0.1:8000/api/cart-items/${cartItemId}/`,
+                `${API_URL}/api/cart-items/${cartItemId}/`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`

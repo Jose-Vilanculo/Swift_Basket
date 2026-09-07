@@ -8,6 +8,7 @@ import { CategoriesPage } from "./pages/CategoriesPage"
 import { useEffect, useState } from "react"
 import { Navbar } from "./components/Navbar"
 import axios from "axios"
+import API_URL from "../src/services/api"
 import { getAccessToken, isAuthenticated } from "./services/auth"
 import { getGuestCart } from "./services/guest_cart"
 import { ProductPage } from "./pages/ProductPage"
@@ -21,6 +22,7 @@ import { SearchPage } from "./pages/SearchPage"
 import { Footer } from "./components/Footer/Footer"
 import { ScrollToTop } from "./services/ScrollToTop"
 import { ResetPassword } from "./pages/ResetPasswordPage"
+
 
 function App() {
 
@@ -39,7 +41,7 @@ function App() {
         try {
 
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/guest_cart/",
+            `${API_URL}/api/guest_cart/`,
             {
                 items: guestCart
             }
@@ -57,7 +59,7 @@ function App() {
       const accessToken = getAccessToken()
 
       const response = await axios.get(
-          "http://127.0.0.1:8000/api/cart/",
+          `${API_URL}/api/cart/`,
           {
               headers: {
                   Authorization: `Bearer ${accessToken}`
@@ -78,7 +80,7 @@ function App() {
 
       try {
           const response = await axios.get(
-              "http://127.0.0.1:8000/api/users",
+              `${API_URL}/api/users`,
               {
                   headers: {
                       Authorization: `Bearer ${token}`
@@ -108,6 +110,8 @@ function App() {
 
     
 const initialize = async () => {
+  console.log("vite_api_url")
+  console.log(import.meta.env.VITE_API_URL);
     const auth = await isAuthenticated();
 
     setAuthenticated(auth);

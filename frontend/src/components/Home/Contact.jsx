@@ -4,6 +4,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import classes from "./Contact.module.css";
 import { useState } from "react";
 import axios from "axios";
+import API_URL from "../../services/api";
 
 export const Contact = () => {
 
@@ -40,7 +41,7 @@ export const Contact = () => {
         }
 
         try {
-            await axios.post("http://localhost:8000/api/contact/", formData);
+            await axios.post(`${API_URL}/api/contact/`, formData);
 
             alert("Message sent successfully!");
 

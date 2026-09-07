@@ -11,6 +11,7 @@ import { getAccessToken } from '../../services/auth';
 import axios from 'axios';
 import { BiPackage } from 'react-icons/bi';
 import { FiArrowLeft } from 'react-icons/fi';
+import API_URL from '../../services/api';
 
 
 export const PaymentSection = (props) => {
@@ -71,7 +72,7 @@ export const PaymentSection = (props) => {
 
         try {
             const response = await axios.post(
-                `http://127.0.0.1:8000/api/order/`,
+                `${API_URL}/api/order/`,
                 {...shippingAddress},
                 {
                     headers: {

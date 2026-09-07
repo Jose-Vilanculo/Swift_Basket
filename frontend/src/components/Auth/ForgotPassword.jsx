@@ -1,6 +1,8 @@
 import classes from './Auth.module.css'
 import { useState } from 'react';
 import axios from 'axios';
+import API_URL from "../../services/api"
+
 
 export const ForgotPasswordForm = () => {
 
@@ -19,7 +21,7 @@ export const ForgotPasswordForm = () => {
 
         try {
             await axios.post(
-                "http://127.0.0.1:8000/api/password-reset/request/",
+                `${API_URL}/api/password-reset/request/`,
                 {
                     email,
                 }

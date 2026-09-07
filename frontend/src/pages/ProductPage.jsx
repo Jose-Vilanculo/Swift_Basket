@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ProductDetails } from "../components/Product/ProductDetails";
 import { ProductReviews } from "../components/Product/ProductReviews";
+import API_URL from "../services/api";
 
 export const ProductPage = (props) => {
 
@@ -17,7 +18,7 @@ export const ProductPage = (props) => {
 
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/reviews/?slug=${productSlug}`
+                    `${API_URL}/reviews/?slug=${productSlug}`
                 );
 
                 setReviews(response.data.review_count);

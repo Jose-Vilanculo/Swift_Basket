@@ -6,6 +6,7 @@ import axios from 'axios';
 import { HiMiniStar, HiOutlineStar } from 'react-icons/hi2';
 import { ReviewForm } from './forms/ReviewForm';
 import { getAccessToken } from '../../services/auth';
+import API_URL from '../../services/api';
 
 
 export const ProductReviews = (props) => {
@@ -25,7 +26,7 @@ export const ProductReviews = (props) => {
         const accessToken  = getAccessToken();
 
         const response = await axios.get(
-            `http://127.0.0.1:8000/api/reviews/?slug=${productSlug}&page=${page}`,
+            `${API_URL}/api/reviews/?slug=${productSlug}&page=${page}`,
             {
                 headers: {
                     ...(authenticated && {

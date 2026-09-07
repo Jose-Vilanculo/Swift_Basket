@@ -4,6 +4,7 @@ import classes from "./ReviewForm.module.css";
 import { getAccessToken } from "../../../services/auth";
 import axios from "axios";
 import toast from "react-hot-toast";
+import API_URL from "../../../services/api";
 
 
 export const ReviewForm = (props) => {
@@ -50,7 +51,7 @@ export const ReviewForm = (props) => {
             const accessToken = getAccessToken();
 
             await axios.post(
-                    `http://127.0.0.1:8000/api/reviews/`,
+                    `${API_URL}/api/reviews/`,
                     {
                         rating,
                         product,

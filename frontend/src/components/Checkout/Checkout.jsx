@@ -7,6 +7,7 @@ import { getAccessToken } from '../../services/auth';
 import { CiEdit } from 'react-icons/ci';
 import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../../services/api';
 
 
 export const CheckoutSection = (props) => {
@@ -57,7 +58,7 @@ export const CheckoutSection = (props) => {
             // Get saved previously address
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/address/`,
+                    `${API_URL}/api/address/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -101,7 +102,7 @@ export const CheckoutSection = (props) => {
                 const token = getAccessToken();
                 try {
                     await axios.post(
-                        `http://127.0.0.1:8000/api/address/`,
+                        `${API_URL}/api/address/`,
                         address,
                         {
                             headers: {

@@ -1,6 +1,7 @@
 import classes from './Auth.module.css'
 import { useState } from 'react';
 import axios from 'axios';
+import API_URL from "../../services/api"
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export const LoginForm = (props) => {
@@ -32,7 +33,7 @@ export const LoginForm = (props) => {
 
         try {
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/token/",
+                `${API_URL}/api/token/`,
                 formData
             );
 
@@ -44,7 +45,7 @@ export const LoginForm = (props) => {
 
             if (guestCart.length > 0) {
                 await axios.post(
-                    "http://127.0.0.1:8000/api/cart/merge/",
+                    `${API_URL}/api/cart/merge/`,
                     {
                         items: guestCart
                     },

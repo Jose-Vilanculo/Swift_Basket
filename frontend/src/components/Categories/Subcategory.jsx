@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import classes from './Subcategory.module.css'
 import axios from 'axios'
 import { IoIosArrowForward } from 'react-icons/io'
+import API_URL from '../../services/api'
 
 
 export const Subcategory = (props) => {
@@ -15,7 +16,7 @@ export const Subcategory = (props) => {
         const fetchSubCategories = async () => {
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/categories/?category=${category}`
+                    `${API_URL}/api/categories/?category=${category}`
                 );
 
                 setSubcategory(response.data.results[0].subcategories);

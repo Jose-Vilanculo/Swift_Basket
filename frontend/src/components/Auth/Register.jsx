@@ -1,6 +1,7 @@
 import classes from './Auth.module.css'
 import { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../../services/api'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -56,7 +57,7 @@ export const RegisterForm = () => {
         // Make API call to register User
         try {
             await axios.post(
-                "http://127.0.0.1:8000/api/register/",
+                `${API_URL}/api/register/`,
                 data,
                 {
                     headers: {

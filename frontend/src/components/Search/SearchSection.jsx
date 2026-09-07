@@ -7,6 +7,7 @@ import { getAccessToken } from '../../services/auth';
 import { formatPrice } from '../../services/formatPrice';
 import { addGuestCartItem } from '../../services/guest_cart';
 import classes from '../Categories/Products.module.css';
+import API_URL from "../../services/api";
 
 
 export const SearchSection = (props) => {
@@ -27,7 +28,7 @@ export const SearchSection = (props) => {
 
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/products/?search=${lookUp}&page=${page}`
+                    `${API_URL}/api/products/?search=${lookUp}&page=${page}`
                 );
 
                 setProducts(response.data.results);
@@ -66,7 +67,7 @@ export const SearchSection = (props) => {
 
                 const accessToken = getAccessToken();
                 await axios.post(
-                    "http://127.0.0.1:8000/api/cart-items/",
+                    `${API_URL}/api/cart-items/`,
                     {
                         product_variant_id: product.product_variant[0].id,
                         quantity: 1
@@ -175,7 +176,7 @@ export const SearchSection = (props) => {
                                 <div className={classes.buttons}>
                                     <a
                                         className={classes["view-item"]}
-                                        href={`http://localhost:5173/product/${product.slug}`}
+                                        onClick={() => navigate(`/product/${product.slug}`)}
                                     >
                                         View Product
                                     </a>

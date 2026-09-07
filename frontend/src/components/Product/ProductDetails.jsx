@@ -7,6 +7,7 @@ import { getAccessToken } from '../../services/auth';
 import { formatPrice } from '../../services/formatPrice';
 import { addToCart } from '../../services/guest_cart';
 import classes from './ProductDetails.module.css';
+import API_URL from '../../services/api';
 
 
 export const ProductDetails = (props) => {
@@ -37,7 +38,7 @@ export const ProductDetails = (props) => {
         const fetchProduct = async() => {
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/products/?product=${productSlug}`
+                    `${API_URL}/api/products/?product=${productSlug}`
                 );
 
 
@@ -111,7 +112,7 @@ export const ProductDetails = (props) => {
         const accessToken = getAccessToken();
         try {
             await axios.post(
-                "http://127.0.0.1:8000/api/cart-items/",
+                `${API_URL}/api/cart-items/`,
                 {
                     product_variant_id: variant.id,
                     quantity: quantity,

@@ -6,6 +6,7 @@ import { FaPlaneDeparture } from 'react-icons/fa';
 import { AiFillFilePdf } from 'react-icons/ai';
 import { formatPrice } from '../../services/formatPrice';
 import noOrdersImage from '../../assets/no-orders.jpg'
+import API_URL from '../../services/api';
 
 
 export const OrdersSection = () => {
@@ -18,7 +19,7 @@ export const OrdersSection = () => {
             try {
                 const token = getAccessToken();
                 const response = await axios.get(
-                    'http://127.0.0.1:8000/api/order/',
+                    `${API_URL}/api/order/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -61,7 +62,7 @@ export const OrdersSection = () => {
             const accessToken = getAccessToken();
 
             const response = await axios.get(
-                `http://127.0.0.1:8000/api/order/${orderId}/invoice/`,
+                `${API_URL}/api/order/${orderId}/invoice/`,
                 {
                     responseType: "blob",
                     headers: {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import classes from './CategoriesHero.module.css';
 import axios from 'axios';
+import API_URL from '../../services/api';
 // import electronicsHome from '../../assets/heroCategory.jpg'
 
 export const CategoriesHero = (props) => {
@@ -14,7 +15,7 @@ export const CategoriesHero = (props) => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/categories/?category=${category}`
+                    `${API_URL}/api/categories/?category=${category}`
                 );
 
                 setCategoryDetails(response.data.results[0]);

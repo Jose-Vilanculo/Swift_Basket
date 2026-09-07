@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import classes from './Auth.module.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../../services/api';
 
 
 export const ResetPasswordForm = (props) => {
@@ -20,7 +21,7 @@ export const ResetPasswordForm = (props) => {
         const verify = async () => {
             try {
                 await axios.post(
-                    "http://127.0.0.1:8000/api/password-reset/verify/",
+                    `${API_URL}/api/password-reset/verify/`,
                     {
                         token,
                     }
@@ -45,7 +46,7 @@ export const ResetPasswordForm = (props) => {
 
         try {
             await axios.post(
-                "http://127.0.0.1:8000/api/password-reset/confirm/",
+                `${API_URL}/api/password-reset/confirm/`,
                 {
                     token,
                     password,
