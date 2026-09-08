@@ -41,7 +41,7 @@ export const PaymentSection = (props) => {
         console.log(address)
 
         return () => clearTimeout(timer);
-    }, [address])
+    }, [])
 
     /* useEffect to lock scrolling while menu is open */
     useEffect(() => {
@@ -62,9 +62,8 @@ export const PaymentSection = (props) => {
     }, [loading, success]);
 
 
-    const handlePay = async() => {
+    const handlePay = async () => {
         setLoading(true);
-        
         // Avoid clicking pay now twice
         setProcessing(true);
 
@@ -73,42 +72,46 @@ export const PaymentSection = (props) => {
         try {
             const response = await axios.post(
                 `${API_URL}/api/order/`,
-                {...shippingAddress},
+                { ...shippingAddress },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 }
             );
+
             setOrder(response.data);
+
+            // Payment succeeded
+            setSuccess(true);
             setLoading(false);
-        } catch(error) {
+
+            // Refresh cart after payment succeeds
+            fetchCartItems();
+
+        } catch (error) {
             console.error(error);
+            setLoading(false);
+
+        } finally {
             setProcessing(false);
         }
-
-        setTimeout(() => {
-            fetchCartItems();
-            setSuccess(true);
-        }, 2000);
-    }
+    };
 
 
     return (
         <>
             <section className={classes.paymentSection}>
 
-                {/* Loading overlay */}
-                {loading && (
+                {loading ? (
                     <>
+                        {/* Loading overlay */}
                         <div className={classes.loader}></div>
                         <div className={classes.overlay}></div>
                     </>
-                )}
-
-                {/* Success pop-up */}
-                {success && (
+                ) : success ? (
                     <>
+                        {/* Success pop-up */}
                         <div className={classes.overlay}>
                             <div className={classes.success}>
 
@@ -167,10 +170,8 @@ export const PaymentSection = (props) => {
                             </div>
                         </div>
                     </>
-                )}
-                
-                
-                
+                ) : null }
+                               
 
                 <div className={classes.container}>
 
