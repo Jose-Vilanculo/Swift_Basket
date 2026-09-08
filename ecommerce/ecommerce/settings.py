@@ -66,7 +66,7 @@ CSRF_TRUSTED_ORIGINS = []
 if ENV == "production":
     CSRF_TRUSTED_ORIGINS = [
         f"https://{os.environ.get('RAILWAY_PUBLIC_DOMAIN')}",
-        os.environ.get('VERCEL_FRONTEND'),
+        os.environ.get('FRONTEND_URL'),
     ]
 
 
@@ -98,12 +98,12 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get("FRONTEND_URL"),
+    "http://localhost:5173"
 ]
 
 if ENV == "production":
     CORS_ALLOWED_ORIGINS += [
-        os.environ.get('VERCEL_FRONTEND')
+        os.environ.get('FRONTEND_URL')
     ]
 
 ROOT_URLCONF = 'ecommerce.urls'
