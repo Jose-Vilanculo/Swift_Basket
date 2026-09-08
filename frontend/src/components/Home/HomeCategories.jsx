@@ -8,7 +8,6 @@ import fashionHim from "../../assets/Home/fashionhim.jpg"
 import fashionHer from "../../assets/Home/fashionher.png"
 import { PopularProducts } from "./PopularProducts"
 import { useNavigate } from "react-router-dom"
-import FRONTEND_URL from "../../services/frontendUrl"
 
 export const HomeCategories = (props) => {
 
@@ -42,7 +41,7 @@ export const HomeCategories = (props) => {
                                 Sport Deals.
                             </h1>
                         </div>
-                        <a href={`${FRONTEND_URL}/products/sportswear`}>
+                        <a href="/products/sportswear">
                             View Items {" >> "}
                         </a>
                     </div>
@@ -65,7 +64,7 @@ export const HomeCategories = (props) => {
                                 <h1>
                                     Gym Equipment
                                 </h1>
-                                <a href={`${FRONTEND_URL}/products/gym-fitness`}>
+                                <a href="/products/gym-fitness">
                                     View Items {" >> "}
                                 </a>
                             </div>
@@ -87,7 +86,7 @@ export const HomeCategories = (props) => {
                                 <h1>
                                     Tech Deals
                                 </h1>
-                                <a href={`${FRONTEND_URL}/products/electronics`}>
+                                <a href="/products/electronics">
                                     View Items {" >> "}
                                 </a>
                             </div>
@@ -127,7 +126,7 @@ export const HomeCategories = (props) => {
                                 Explore furniture designed to transform your living space.
                             </h4>
                         </div>
-                        <a href={`${FRONTEND_URL}/products/home-living`}>
+                        <a href="/products/home-living">
                             View Items {" >> "}
                         </a>
                     </div>
@@ -150,7 +149,7 @@ export const HomeCategories = (props) => {
                                 <h1>
                                     HIM
                                 </h1>
-                                <a href={`${FRONTEND_URL}/products/mens-fashion`}>
+                                <a href="/products/mens-fashion">
                                     View Items {" >> "}
                                 </a>
                             </div>
@@ -172,7 +171,7 @@ export const HomeCategories = (props) => {
                                 <h1>
                                     HER
                                 </h1>
-                                <a href={`${FRONTEND_URL}/products/womens-fashion`}>
+                                <a href="/products/womens-fashion">
                                     View Items {" >> "}
                                 </a>
                             </div>
