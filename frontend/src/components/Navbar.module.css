@@ -660,6 +660,7 @@ input {
     width: 420px;
     max-width: 100%;
     height: 100vh;
+    height: 100dvh;
 
     background: white;
     z-index: 50;
@@ -721,7 +722,7 @@ input {
     align-items: center;
     margin-top: 6rem;
     padding-bottom: 50px;
-    max-height: calc(100vh - 13rem - 70px);
+    max-height: calc(100dvh - 13rem - 70px);
     overflow-y: scroll;
 }
 
