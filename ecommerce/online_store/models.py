@@ -6,6 +6,7 @@ from django.conf import settings
 import uuid
 from datetime import date, timedelta
 from decimal import Decimal
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 
 class CustomUser(AbstractUser):
@@ -455,6 +456,7 @@ class Order(models.Model):
     estimated_delivery=date.today() + timedelta(days=5)
     pdf = models.FileField(
         upload_to="invoices/",
+        storage=RawMediaCloudinaryStorage(),
         null=True,
         blank=True
     )
