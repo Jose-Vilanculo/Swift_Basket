@@ -33,7 +33,8 @@ ENV = os.environ.get("ENV", "development")  # Set ENV=production on Railway
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ENV != "production"
+# DEBUG = ENV != "production"
+DEBUG = True
 
 
 # Allowed hosts
