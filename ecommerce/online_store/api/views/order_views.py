@@ -49,13 +49,13 @@ class OrderViewset(viewsets.ModelViewSet):
             )
 
         # Generate and save invoice
-        pdf = generate_invoice(order)
+        # pdf = generate_invoice(order)
 
-        order.pdf.save(
-            f"invoice-{order.id}.pdf",
-            File(pdf),
-            save=True,
-        )
+        # order.pdf.save(
+        #     f"invoice-{order.id}.pdf",
+        #     File(pdf),
+        #     save=True,
+        # )
 
         # Delete cart items
         cart_items.delete()
@@ -87,11 +87,9 @@ class OrderViewset(viewsets.ModelViewSet):
             to=[order.user.email],
         )
 
-        pdf.seek(0)
-
         email.attach(
             f"Invoice-{order.id}.pdf",
-            pdf.read(),
+            # pdf.read(),
             "application/pdf",
         )
 
