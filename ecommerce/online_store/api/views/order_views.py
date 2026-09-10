@@ -8,6 +8,7 @@ from django.core.files import File
 from django.http import FileResponse, Http404
 from rest_framework.decorators import action
 from django.conf import settings
+import traceback
 
 
 
@@ -19,6 +20,8 @@ class OrderViewset(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # get cart items
         cart = Cart.objects.get(user=self.request.user)
+        print("1 - Got cart")
+
         cart_items = CartItem.objects.filter(cart=cart)
 
         # dont allow orders without any cart items
@@ -38,6 +41,7 @@ class OrderViewset(viewsets.ModelViewSet):
             user=self.request.user,
             total_price=total_price,
         )
+        print("2 - Created order")
 
         # Create order items
         for item in cart_items:
@@ -47,6 +51,7 @@ class OrderViewset(viewsets.ModelViewSet):
                 quantity=item.quantity,
                 price=item.product_variant.final_price,
             )
+        print("3 - Created order items")
 
         # Generate and save invoice
         # pdf = generate_invoice(order)
@@ -59,6 +64,7 @@ class OrderViewset(viewsets.ModelViewSet):
 
         # Delete cart items
         cart_items.delete()
+        print("4 - Deleted cart")
 
 
         # Send user confirmation email
@@ -87,13 +93,19 @@ class OrderViewset(viewsets.ModelViewSet):
             to=[order.user.email],
         )
 
-        email.attach(
-            f"Invoice-{order.id}.pdf",
-            # pdf.read(),
-            "application/pdf",
-        )
+        # email.attach(
+        #     f"Invoice-{order.id}.pdf",
+        #     # pdf.read(),
+        #     "application/pdf",
+        # )
+        print("5 - About to send email")
 
-        email.send()
+        try:
+            email.send()
+            print("6 - Email sent")
+        except Exception:
+            traceback.print_exc()
+            raise
 
     
     def get_queryset(self):
