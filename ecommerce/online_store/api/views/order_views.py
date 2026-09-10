@@ -22,7 +22,7 @@ class OrderViewset(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print(settings.EMAIL_HOST)
         print(settings.EMAIL_PORT)
-        print(settings.EMAIL_USE_TLS)
+        print(settings.EMAIL_USE_SSL)
         print(settings.EMAIL_HOST_USER)
         print(settings.DEFAULT_FROM_EMAIL)
         # get cart items
