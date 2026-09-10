@@ -9,6 +9,8 @@ from django.http import FileResponse, Http404
 from rest_framework.decorators import action
 from django.conf import settings
 import traceback
+import socket
+
 
 
 
@@ -104,6 +106,16 @@ class OrderViewset(viewsets.ModelViewSet):
         #     "application/pdf",
         # )
         print("5 - About to send email")
+
+        print("Testing SMTP connection...")
+
+        sock = socket.create_connection(
+            ("smtp-relay.brevo.com", 587),
+            timeout=10,
+        )
+
+        print("Connected!")
+        sock.close()
 
         try:
             email.send()
