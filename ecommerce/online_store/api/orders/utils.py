@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from io import BytesIO
 import base64
 import requests
@@ -13,6 +15,9 @@ from reportlab.platypus import (
     Paragraph,
     Spacer,
 )
+
+
+load_dotenv()
 
 
 def generate_invoice(order):
@@ -195,7 +200,7 @@ def send_order_confirmation_email(order, pdf_bytes=None):
     url = "https://api.brevo.com/v3/smtp/email"
 
     payload = {
-        "sender": {"name": "Swift Basket", "email": settings.DEFAULT_FROM_EMAIL},
+        "sender": {"name": "Swift Basket", "email": os.environ.get('EMAIL_RECIPIENT')},
         "to": [{"email": order.user.email}],
         "subject": f"Swift Basket Order #{order.id}",
         "textContent": f"""
@@ -227,10 +232,14 @@ Swift Basket
 
     headers = {
         "accept": "application/json",
-        "api-key": settings.BREVO_API_KEY,
+        "api-key": os.environ.get('BREVO_API_KEY'),
         "content-type": "application/json",
     }
 
     response = requests.post(url, json=payload, headers=headers, timeout=10)
+
+    if not response.ok:
+        print("Brevo error response:", response.text)
+
     response.raise_for_status()
     return response.json()
