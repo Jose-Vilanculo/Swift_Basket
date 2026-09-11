@@ -1,6 +1,8 @@
 from io import BytesIO
-
+import base64
+import requests
 from reportlab.lib import colors
+from django.conf import settings
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
@@ -187,3 +189,48 @@ def generate_invoice(order):
     buffer.seek(0)
 
     return buffer
+
+
+def send_order_confirmation_email(order, pdf_bytes=None):
+    url = "https://api.brevo.com/v3/smtp/email"
+
+    payload = {
+        "sender": {"name": "Swift Basket", "email": settings.DEFAULT_FROM_EMAIL},
+        "to": [{"email": order.user.email}],
+        "subject": f"Swift Basket Order #{order.id}",
+        "textContent": f"""
+Hi {order.shipping_full_name},
+
+Thank you for shopping with Swift Basket!
+
+Your order has been received and is being processed.
+
+Order Number: #{order.id}
+
+Estimated Delivery:
+{order.estimated_delivery.strftime("%d %b %Y")}
+
+Your invoice is attached.
+
+Regards,
+Swift Basket
+""",
+    }
+
+    if pdf_bytes:
+        payload["attachment"] = [
+            {
+                "content": base64.b64encode(pdf_bytes).decode("utf-8"),
+                "name": f"Invoice-{order.id}.pdf",
+            }
+        ]
+
+    headers = {
+        "accept": "application/json",
+        "api-key": settings.BREVO_API_KEY,
+        "content-type": "application/json",
+    }
+
+    response = requests.post(url, json=payload, headers=headers, timeout=10)
+    response.raise_for_status()
+    return response.json()

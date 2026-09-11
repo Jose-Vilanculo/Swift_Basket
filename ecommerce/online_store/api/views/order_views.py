@@ -1,17 +1,13 @@
+import traceback
+from io import BytesIO
+from django.core.files import File
 from rest_framework import viewsets, serializers
 from online_store.models import CartItem, Cart, OrderItem, Order
 from online_store.api.serializers import OrderSerializer
 from online_store.api.permissions import IsBuyer
-from django.core.mail import EmailMessage
-from ..orders.utils import generate_invoice
-from django.core.files import File
 from django.http import FileResponse, Http404
+from ..orders.utils import generate_invoice
 from rest_framework.decorators import action
-from django.conf import settings
-import traceback
-import socket
-
-
 
 
 class OrderViewset(viewsets.ModelViewSet):
@@ -19,12 +15,9 @@ class OrderViewset(viewsets.ModelViewSet):
     permission_classes = [IsBuyer]
     http_method_names = ["get", "post"]
 
+    
     def perform_create(self, serializer):
-        print(settings.EMAIL_HOST)
-        print(settings.EMAIL_PORT)
-        print(settings.EMAIL_USE_TLS)
-        print(settings.EMAIL_HOST_USER)
-        print(settings.DEFAULT_FROM_EMAIL)
+
         # get cart items
         cart = Cart.objects.get(user=self.request.user)
         print("1 - Got cart")
@@ -60,65 +53,29 @@ class OrderViewset(viewsets.ModelViewSet):
             )
         print("3 - Created order items")
 
-        # Generate and save invoice
-        # pdf = generate_invoice(order)
-
-        # order.pdf.save(
-        #     f"invoice-{order.id}.pdf",
-        #     File(pdf),
-        #     save=True,
-        # )
-
         # Delete cart items
         cart_items.delete()
         print("4 - Deleted cart")
 
+        # Generate and save invoice
+        pdf_buffer = generate_invoice(order)
+        pdf_bytes = pdf_buffer.read()
+
+        order.pdf.save(
+            f"invoice-{order.id}.pdf",
+            File(BytesIO(pdf_bytes)),
+            save=True,
+        )
+
+        print("4.5 - Generated and saved invoice")
+
 
         # Send user confirmation email
         
-
-        email = EmailMessage(
-            subject=f"Swift Basket Order #{order.id}",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            body=f"""
-        Hi {order.shipping_full_name},
-
-        Thank you for shopping with Swift Basket!
-
-        Your order has been received and is being processed.
-
-        Order Number: #{order.id}
-
-        Estimated Delivery:
-        {order.estimated_delivery.strftime("%d %b %Y")}
-
-        Your invoice is attached.
-
-        Regards,
-        Swift Basket
-        """,
-            to=[order.user.email],
-        )
-
-        # email.attach(
-        #     f"Invoice-{order.id}.pdf",
-        #     # pdf.read(),
-        #     "application/pdf",
-        # )
         print("5 - About to send email")
 
-        print("Testing SMTP connection...")
-
-        sock = socket.create_connection(
-            ("smtp-relay.brevo.com", 587),
-            timeout=10,
-        )
-
-        print("Connected!")
-        sock.close()
-
         try:
-            email.send()
+            self.send_order_confirmation_email(order, pdf_bytes=pdf_bytes)
             print("6 - Email sent")
         except Exception:
             traceback.print_exc()
