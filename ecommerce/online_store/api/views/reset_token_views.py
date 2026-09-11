@@ -1,13 +1,12 @@
 from hashlib import sha1
 from datetime import timedelta
 import secrets
-
+import requests
 import os
 from dotenv import load_dotenv
 from django.conf import settings
 
 from django.contrib.auth import get_user_model
-from django.core.mail import EmailMessage
 from django.utils import timezone
 
 from rest_framework.views import APIView
@@ -27,7 +26,7 @@ load_dotenv()
 
 def build_email(user, reset_url):
     """
-    Builds password reset email.
+    Builds password reset email payload for Brevo API.
     """
 
     subject = "Password Reset"
@@ -46,12 +45,30 @@ This link expires in 5 minutes.
 If you did not request this, you can ignore this email.
 """
 
-    return EmailMessage(
-        subject=subject,
-        body=body,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[user.email]
-    )
+    return {
+        "sender": {"name": "Swift Basket", "email": os.environ.get("EMAIL_RECIPIENT")},
+        "to": [{"email": user.email}],
+        "subject": subject,
+        "textContent": body,
+    }
+
+
+def send_brevo_email(payload):
+    url = "https://api.brevo.com/v3/smtp/email"
+
+    headers = {
+        "accept": "application/json",
+        "api-key": os.environ.get("BREVO_API_KEY"),
+        "content-type": "application/json",
+    }
+
+    response = requests.post(url, json=payload, headers=headers, timeout=10)
+
+    if not response.ok:
+        print("Brevo error response:", response.text)
+
+    response.raise_for_status()
+    return response.json()
 
 
 def generate_reset_token(user):
@@ -111,13 +128,13 @@ class PasswordResetRequestView(APIView):
                 f"{token}"
             )
 
-            email_message = build_email(
+            payload = build_email(
                 user,
                 reset_url
             )
 
             try:
-                email_message.send()
+                send_brevo_email(payload)
                 print("Password reset email sent!")
             except Exception as e:
                 print("EMAIL ERROR:", e)

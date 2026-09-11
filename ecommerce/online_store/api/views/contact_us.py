@@ -1,12 +1,11 @@
-import os
+import traceback
+from ..orders.utils import send_contact_form_email
+import requests
 from dotenv import load_dotenv
-from django.core.mail import send_mail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from online_store.api.serializers import ContactSerializer
-
-
 
 load_dotenv()
 
@@ -20,22 +19,14 @@ def contact(request):
 
     data = serializer.validated_data
 
-    message = f"""
-Name: {data['name']}
-Email: {data['email']}
-Phone: {data.get('phone', 'Not provided')}
-
-Message:
-{data['comment']}
-"""
-
-    send_mail(
-        subject=f"New Contact Form Submission from {data['name']}",
-        message=message,
-        from_email=None,
-        recipient_list=[os.environ.get('EMAIL_RECIPIENT')],
-        fail_silently=False,
-    )
+    try:
+        send_contact_form_email(data)
+    except requests.exceptions.RequestException:
+        traceback.print_exc()
+        return Response(
+            {"error": "Failed to send email. Please try again later."},
+            status=status.HTTP_502_BAD_GATEWAY,
+        )
 
     return Response(
         {"message": "Email sent successfully"},

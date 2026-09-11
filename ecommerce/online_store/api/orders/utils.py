@@ -243,3 +243,38 @@ Swift Basket
 
     response.raise_for_status()
     return response.json()
+
+
+def send_contact_form_email(data):
+    url = "https://api.brevo.com/v3/smtp/email"
+
+    message = f"""
+Name: {data['name']}
+Email: {data['email']}
+Phone: {data.get('phone', 'Not provided')}
+
+Message:
+{data['comment']}
+"""
+
+    payload = {
+        "sender": {"name": "Swift Basket", "email": os.environ.get('EMAIL_RECIPIENT')},
+        "to": [{"email": os.environ.get('EMAIL_RECIPIENT')}],
+        "replyTo": {"email": data["email"], "name": data["name"]},
+        "subject": f"New Contact Form Submission from {data['name']}",
+        "textContent": message,
+    }
+
+    headers = {
+        "accept": "application/json",
+        "api-key": os.environ.get('BREVO_API_KEY'),
+        "content-type": "application/json",
+    }
+
+    response = requests.post(url, json=payload, headers=headers, timeout=10)
+
+    if not response.ok:
+        print("Brevo error response:", response.text)
+
+    response.raise_for_status()
+    return response.json()
