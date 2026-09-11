@@ -6,7 +6,7 @@ from online_store.models import CartItem, Cart, OrderItem, Order
 from online_store.api.serializers import OrderSerializer
 from online_store.api.permissions import IsBuyer
 from django.http import FileResponse, Http404
-from ..orders.utils import generate_invoice
+from ..orders.utils import generate_invoice, send_order_confirmation_email
 from rest_framework.decorators import action
 
 
@@ -75,7 +75,7 @@ class OrderViewset(viewsets.ModelViewSet):
         print("5 - About to send email")
 
         try:
-            self.send_order_confirmation_email(order, pdf_bytes=pdf_bytes)
+            send_order_confirmation_email(order, pdf_bytes=pdf_bytes)
             print("6 - Email sent")
         except Exception:
             traceback.print_exc()
