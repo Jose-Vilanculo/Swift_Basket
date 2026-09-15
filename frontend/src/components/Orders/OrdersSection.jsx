@@ -64,24 +64,19 @@ export const OrdersSection = () => {
             const response = await axios.get(
                 `${API_URL}/api/order/${orderId}/invoice/`,
                 {
-                    responseType: "blob",
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 }
             );
 
-            const url = window.URL.createObjectURL(response.data);
-
             const link = document.createElement("a");
-            link.href = url;
+            link.href = response.data.url;
             link.download = `invoice-${orderId}.pdf`;
 
             document.body.appendChild(link);
             link.click();
-
             link.remove();
-            window.URL.revokeObjectURL(url);
 
         } catch (error) {
             console.error(error);

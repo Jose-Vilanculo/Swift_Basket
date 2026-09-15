@@ -5,7 +5,9 @@ from rest_framework import viewsets, serializers
 from online_store.models import CartItem, Cart, OrderItem, Order
 from online_store.api.serializers import OrderSerializer
 from online_store.api.permissions import IsBuyer
-from django.http import FileResponse, Http404
+from django.http import Http404
+from rest_framework.response import Response
+import cloudinary.utils
 from ..orders.utils import generate_invoice, send_order_confirmation_email
 from rest_framework.decorators import action
 
@@ -69,6 +71,11 @@ class OrderViewset(viewsets.ModelViewSet):
 
         print("4.5 - Generated and saved invoice")
 
+        orderss = Order.objects.latest("date_created_at")
+
+        print(orderss.pdf.name)
+        print(orderss.pdf.url)
+
 
         # Send user confirmation email
         
@@ -98,9 +105,19 @@ class OrderViewset(viewsets.ModelViewSet):
         if not order.pdf:
             raise Http404("Invoice not found.")
 
-        return FileResponse(
-            order.pdf.open("rb"),
-            as_attachment=True,
-            filename=f"invoice-{order.id}.pdf",
-            content_type="application/pdf",
+
+        if not order.pdf:
+            raise Http404("Invoice not found.")
+
+        signed_url, options = cloudinary.utils.cloudinary_url(
+            order.pdf.name,
+            resource_type="raw",
+            type="upload",   # change to "authenticated" when invoices are private
+            secure=True,
+            sign_url=True,
+            flags="attachment"
         )
+
+        return Response({
+            "url": signed_url
+        })
