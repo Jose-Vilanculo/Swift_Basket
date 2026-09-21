@@ -93,6 +93,8 @@
     justify-content: center;
     gap: 12px;
     margin-top: 18px;
+    width: 100%;
+    overflow: auto;
 }
 
 .thumbnails img {
