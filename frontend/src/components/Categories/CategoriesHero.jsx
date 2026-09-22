@@ -2,23 +2,31 @@ import { useState, useEffect } from 'react';
 import classes from './CategoriesHero.module.css';
 import axios from 'axios';
 import API_URL from '../../services/api';
-// import electronicsHome from '../../assets/heroCategory.jpg'
+import { CategoriesHeroSkeleton } from '../Skeletons/Categories/CategoriesHeroSkeleton';
+
 
 export const CategoriesHero = (props) => {
 
     const category = props.category
-
-    const [categoryDetails, setCategoryDetails] = useState([]);
+    const [loading, setLoading] = useState(true)
+    const [categoryDetails, setCategoryDetails] = useState(null);
+    const [backgroundLoaded, setBackgroundLoaded] = useState(false);
 
      // Use effect to get products by their categories
     useEffect(() => {
         const fetchCategories = async () => {
             try {
+
+                setLoading(true);
+                setBackgroundLoaded(false);
+
                 const response = await axios.get(
                     `${API_URL}/api/categories/?category=${category}`
                 );
 
                 setCategoryDetails(response.data.results[0]);
+                setLoading(false);
+
             } catch (error) {
                 console.error(error);
             }
@@ -27,35 +35,54 @@ export const CategoriesHero = (props) => {
         fetchCategories();
     }, [category]);
 
-    // console.log(categoryDetails)
+
+    useEffect(() => {
+        if (!categoryDetails?.background_image) return;
+
+        const image = new Image();
+
+        image.src = categoryDetails.background_image;
+
+        image.onload = () => {
+            setBackgroundLoaded(true);
+        };
+
+        image.onerror = () => {
+            setBackgroundLoaded(true);
+        };
+
+        return () => {
+            image.onload = null;
+            image.onerror = null;
+        };
+    }, [categoryDetails]);
 
 
     return (
-        // <section className={classes.hero}>
-        // <div className={classes.img}>
-        //     <div className={classes["img-overlay"]}>
-        //         <div className={classes.content}>
-        //             <h1>Gym & Fitness</h1>
-        //             <p>
-        //                 Discover quality skincare designed to cleanse, hydrate, and care for your skin. Build a routine that leaves your skin looking its best.
-        //             </p>
-        //             <a href="#categories">Shop Now</a>
-        //         </div>
-        //     </div>
-        // </div>
-        
-        // </section>
 
         <section id='category-hero'
             className={classes.hero}
-            style={{ "--bg": `url(${categoryDetails.background_image})` }}
+            style={
+                backgroundLoaded
+                    ? { "--bg": `url(${categoryDetails.background_image})` }
+                    : {}
+            }
         >
         <div className={classes.img}>
             <div className={classes["img-overlay"]}>
                 <div className={classes.content}>
-                    <h1>{categoryDetails.name}</h1>
-                    <p>{categoryDetails.description}</p>
-                    <a href="#products">Shop Now</a>
+                    {
+                        loading || !backgroundLoaded
+                        ? (
+                            <CategoriesHeroSkeleton />
+                        ) : (
+                            <>
+                                <h1>{categoryDetails.name}</h1>
+                                <p>{categoryDetails.description}</p>
+                                <a href="#products">Shop Now</a>
+                            </>
+                        )
+                    }
                 </div>
             </div>
         </div>

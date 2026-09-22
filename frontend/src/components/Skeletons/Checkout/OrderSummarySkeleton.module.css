@@ -1,0 +1,276 @@
+.cart {
+    width: calc(60% - 40px);
+    padding: 7px 20px;
+}
+
+/* Shimmer */
+
+.heading,
+.total,
+.deliveryDate,
+.productName,
+.variant,
+.quantity,
+.priceText,
+.summaryText,
+.summaryPrice,
+.paymentText,
+.paymentPrice,
+.product-img {
+    background: linear-gradient(
+        90deg,
+        #e8e8e8 25%,
+        #f5f5f5 50%,
+        #e8e8e8 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Header */
+
+.header {
+    font-size: 1rem;
+    color: black;
+    margin-bottom: -1rem;
+    width: 130px;
+    height: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+}
+
+.total {
+    width: 180px;
+    height: 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.deliveryDate {
+    width: 210px;
+    height: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+/* Cart Items */
+
+.items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cart-item {
+    display: flex;
+    width: 100%;
+    gap: 0.8rem;
+    border: 1px solid rgb(184, 184, 184);
+    border-radius: 15px;
+    padding: 0.5rem 0.6rem;
+    box-sizing: border-box;
+}
+
+.product-img {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 2px;
+}
+
+.product-details {
+    display: flex;
+    justify-content: space-between;
+    color: black;
+    width: 100%;
+    gap: 2rem;
+}
+
+.details {
+    width: 65%;
+}
+
+.productName {
+    width: 90%;
+    height: 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.variant {
+    width: 55%;
+    height: 0.65rem;
+    border-radius: 4px;
+    margin-bottom: 0.35rem;
+}
+
+.quantity {
+    width: 35%;
+    height: 0.65rem;
+    border-radius: 4px;
+    margin-top: 0.35rem;
+}
+
+.price {
+    margin: 0 1rem 0 0;
+    width: 35%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.priceText {
+    width: 70px;
+    height: 0.9rem;
+    border-radius: 4px;
+    margin-bottom: 0;
+}
+
+/* Divider */
+
+.line {
+    width: calc(100% + 1rem);
+    height: 1px;
+    margin: 8px auto;
+}
+
+/* Summary */
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% + 1rem);
+    gap: 0;
+}
+
+.subtotal,
+.delivery {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.subtotal {
+    border-top: 1px solid #a3a3a3;
+}
+
+.delivery {
+    border-bottom: 1px solid #a3a3a3;
+}
+
+.summaryText,
+.summaryPrice {
+    height: 0.9rem;
+    border-radius: 4px;
+    margin: 7px;
+}
+
+.summaryText {
+    width: 145px;
+}
+
+.summaryPrice {
+    width: 70px;
+}
+
+/* Payment */
+
+.payment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% + 15px);
+    height: 45px;
+    margin: 30px auto;
+    padding: 0.3rem 1rem;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.paymentText,
+.paymentPrice {
+    height: 0.9rem;
+    border-radius: 4px;
+}
+
+.paymentText {
+    width: 65px;
+    margin-left: 10px;
+}
+
+.paymentPrice {
+    width: 80px;
+    margin-right: 10px;
+}
+
+
+/* ----- Media Queries ----- */
+
+@media screen and (max-width: 600px) {
+
+    .cart {
+        width: 100%;
+        padding: 3rem 0 0;
+    }
+
+    .cart-item {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .payment {
+        width: 100%;
+    }
+
+    .summary {
+        width: 100%;
+    }
+
+    .price {
+        width: 35%;
+    }
+
+    .priceText {
+        width: 60px;
+    }
+}
+
+
+@media screen and (min-width: 601px) and (max-width: 1100px) {
+
+    .cart {
+        width: 100%;
+        padding: 4rem 0 0;
+    }
+
+    .cart-item {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .payment {
+        width: 100%;
+    }
+
+    .summary {
+        width: 100%;
+    }
+}
+
+
+@media screen and (min-width: 1101px) and (max-width: 1400px) {
+
+    .cart {
+        width: calc(60% - 40px);
+    }
+}

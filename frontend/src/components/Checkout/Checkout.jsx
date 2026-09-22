@@ -8,6 +8,7 @@ import { CiEdit } from 'react-icons/ci';
 import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../../services/api';
+import { OrderSummarySkeleton } from '../Skeletons/Checkout/OrderSummarySkeleton';
 
 
 export const CheckoutSection = (props) => {
@@ -171,87 +172,93 @@ export const CheckoutSection = (props) => {
                     }
                 </div>
 
-
-                <div className={classes.cart}>
+                {loading ? (
+                    <OrderSummarySkeleton />
+                ) : (
+                    <>
+                        <div className={classes.cart}>
                     
-                    <h2>Order Summary</h2>
-                    <h4>Total R {formatPrice(cartItems.subtotal)} - {cartItems.total_products}
-                        {cartItems.total_products > 1 ? " Items" : " Item"}
-                    </h4>
-                    <h3>Est Delivery date, {" "}
-                        {new Date(cartItems.estimated_delivery).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                        })}
-                    </h3>
-                    
-                    {/* Cart Items */}
-                    <div className={classes.items}>
-                    {cartItems?.total_products > 0 && 
-                    
-                        cartItems.cartitem_set.map((item) => (
-                            <div className={classes["cart-item"]} key={item.id}>
+                            <h2>Order Summary</h2>
+                            <h4>Total R {formatPrice(cartItems.subtotal)} - {cartItems.total_products}
+                                {cartItems.total_products > 1 ? " Items" : " Item"}
+                            </h4>
+                            <h3>Est Delivery date, {" "}
+                                {new Date(cartItems.estimated_delivery).toLocaleDateString("en-GB", {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                })}
+                            </h3>
+                            
+                            {/* Cart Items */}
+                            <div className={classes.items}>
+                            {cartItems?.total_products > 0 && 
+                            
+                                cartItems.cartitem_set.map((item) => (
+                                    <div className={classes["cart-item"]} key={item.id}>
 
-                                <div className={classes["product-img"]}>
-                                    <img src={item.item.main_image.image}/>
-                                </div>
+                                        <div className={classes["product-img"]}>
+                                            <img src={item.item.main_image.image}/>
+                                        </div>
 
-                                <div className={classes["product-details"]}>
+                                        <div className={classes["product-details"]}>
 
-                                    <div className={classes.details}>
-                                        <h5>
-                                            {item.item.product_name}
-                                        </h5>
-                                        {Object.entries(item.product_variant.attributes).map(([key, value]) => (
-                                            <p key={key}>
-                                                {key}: {value}
-                                            </p>
-                                        ))}
-                                        <p>quantity: {item.quantity}</p>
+                                            <div className={classes.details}>
+                                                <h5>
+                                                    {item.item.product_name}
+                                                </h5>
+                                                {Object.entries(item.product_variant.attributes).map(([key, value]) => (
+                                                    <p key={key}>
+                                                        {key}: {value}
+                                                    </p>
+                                                ))}
+                                                <p>quantity: {item.quantity}</p>
+                                            </div>
+
+                                            <div className={classes.price}>
+                                                <h4>R {formatPrice(item.line_price)}</h4>
+                                            </div>
+                                            
+                                        </div>
                                     </div>
-
-                                    <div className={classes.price}>
-                                        <h4>R {formatPrice(item.line_price)}</h4>
-                                    </div>
-                                    
-                                </div>
+                                ))
+                            }
                             </div>
-                        ))
-                    }
-                    </div>
 
-                    {/* Line */}
-                    <div className={classes.line}></div>
+                            {/* Line */}
+                            <div className={classes.line}></div>
 
-                    {/* summary */}
-                    <div className={classes.summary}>
-                        <div className={classes.subtotal}>
-                            <p>Subtotal ({cartItems.total_products} Items)</p>
-                            <p>R {formatPrice(cartItems.subtotal)}</p>
+                            {/* summary */}
+                            <div className={classes.summary}>
+                                <div className={classes.subtotal}>
+                                    <p>Subtotal ({cartItems.total_products} Items)</p>
+                                    <p>R {formatPrice(cartItems.subtotal)}</p>
+                                </div>
+                                <div className={classes.delivery}>
+                                    <p>Delivery fee</p>
+                                    <p>R {formatPrice(cartItems.delivery_fee)}</p>
+                                </div>
+                                
+                            </div>
+
+                            {error && (
+                                <p className={classes.error}>( {error})</p>
+                            )}
+
+                            {/* Payment button */}
+                            <button
+                                className={classes.payment}
+                                onClick={handlePayNow}
+                            >
+                                <p>Pay Now</p>
+                                <p>R {formatPrice(cartItems.subtotal + cartItems.delivery_fee)}</p>
+                            </button>
+
                         </div>
-                        <div className={classes.delivery}>
-                            <p>Delivery fee</p>
-                            <p>R {formatPrice(cartItems.delivery_fee)}</p>
-                        </div>
-                        
-                    </div>
 
-                    {error && (
-                        <p className={classes.error}>( {error})</p>
-                    )}
-
-                    {/* Payment button */}
-                    <button
-                        className={classes.payment}
-                        onClick={handlePayNow}
-                    >
-                        <p>Pay Now</p>
-                        <p>R {formatPrice(cartItems.subtotal + cartItems.delivery_fee)}</p>
-                    </button>
-
-                </div>
-
+                    </>
+                )}
+                
                 
 
             </div>

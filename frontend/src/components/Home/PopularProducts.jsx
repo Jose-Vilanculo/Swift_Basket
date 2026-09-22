@@ -9,6 +9,7 @@ import axios from "axios";
 import { addGuestCartItem } from "../../services/guest_cart";
 import useEmblaCarousel from "embla-carousel-react";
 import API_URL from "../../services/api";
+import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 
 export const PopularProducts = (props) => {
 
@@ -163,14 +164,20 @@ export const PopularProducts = (props) => {
                     className={classes.prev}
                     onClick={() => emblaApi?.scrollPrev()}
                 >
-                    ←
+                    <SlArrowLeft
+                        className={classes.arrow}
+                        color="black"
+                    />
                 </button>
 
                 <button
                     className={classes.next}
                     onClick={() => emblaApi?.scrollNext()}
                 >
-                    →
+                    <SlArrowRight
+                        className={classes.arrow}
+                        color="black"
+                    />
                 </button>
             </div>
             

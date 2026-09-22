@@ -1,0 +1,592 @@
+/* --------------------------------
+   Skeleton Animation
+-------------------------------- */
+
+.product-section {
+    width: 100%;
+    display: flex;
+    margin-top: 50px;
+    padding-bottom: 150px;
+}
+
+.product-section * {
+    box-sizing: border-box;
+}
+
+
+/* --------------------------------
+   Shimmer
+-------------------------------- */
+
+.mainImage,
+.thumbnail,
+.link,
+.title,
+.price,
+.stars,
+.reviewText,
+.heading,
+.description,
+.label,
+.select,
+.quantityLabel,
+.quantity,
+.add-to-cart {
+    background: linear-gradient(
+        90deg,
+        #e8e8e8 25%,
+        #f5f5f5 50%,
+        #e8e8e8 75%
+    );
+
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+
+/* --------------------------------
+   Image Section
+-------------------------------- */
+
+.image-section {
+    display: flex;
+    width: 50%;
+}
+
+.gallery {
+    width: 500px;
+    margin: auto;
+}
+
+
+/* --------------------------------
+   Main Image
+-------------------------------- */
+
+.mainImage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+
+/* --------------------------------
+   Image Placeholder
+-------------------------------- */
+
+.imagePlaceholder {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* --------------------------------
+   Skeleton Arrows
+-------------------------------- */
+
+.arrow {
+    position: absolute;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    background: #f5f5f5;
+
+    z-index: 10;
+}
+
+.leftArrow {
+    left: 20px;
+}
+
+.rightArrow {
+    right: 20px;
+}
+
+
+/* --------------------------------
+   Thumbnails
+-------------------------------- */
+
+.thumbnails {
+    display: flex;
+    justify-content: center;
+
+    gap: 12px;
+    margin-top: 18px;
+
+    width: 100%;
+    overflow: hidden;
+}
+
+.thumbnail {
+    width: 90px;
+    aspect-ratio: 1;
+
+    flex-shrink: 0;
+}
+
+
+/* --------------------------------
+   Product Information
+-------------------------------- */
+
+.product-infomation {
+    display: flex;
+    justify-content: center;
+
+    width: 50%;
+    margin: auto;
+}
+
+.info {
+    display: flex;
+
+    width: 70%;
+
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+/* --------------------------------
+   Category Links
+-------------------------------- */
+
+.links {
+    display: flex;
+    gap: 5px;
+
+    height: 16px;
+}
+
+.link {
+    width: 75px;
+    height: 14px;
+
+    border-radius: 3px;
+}
+
+
+/* --------------------------------
+   Product Title
+-------------------------------- */
+
+.title {
+    width: 90%;
+    height: 2.6rem;
+
+    border-radius: 4px;
+}
+
+
+/* --------------------------------
+   Price + Reviews
+-------------------------------- */
+
+.price-review {
+    display: flex;
+    justify-content: space-between;
+
+    width: 90%;
+
+    min-height: 45px;
+}
+
+.price {
+    width: 125px;
+    height: 2rem;
+
+    border-radius: 4px;
+}
+
+
+/* --------------------------------
+   Review
+-------------------------------- */
+
+.review {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    width: 120px;
+
+    gap: 5px;
+}
+
+.stars {
+    width: 90px;
+    height: 18px;
+
+    border-radius: 4px;
+}
+
+.reviewText {
+    width: 75px;
+    height: 14px;
+
+    border-radius: 3px;
+}
+
+
+/* --------------------------------
+   Description
+-------------------------------- */
+
+.description-box {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.heading {
+    width: 120px;
+    height: 1.2rem;
+
+    border-radius: 3px;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+
+    width: 95%;
+}
+
+.description div {
+    height: 15px;
+
+    border-radius: 3px;
+
+    background: linear-gradient(
+        90deg,
+        #e8e8e8 25%,
+        #f5f5f5 50%,
+        #e8e8e8 75%
+    );
+
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.description div:nth-child(1) {
+    width: 100%;
+}
+
+.description div:nth-child(2) {
+    width: 95%;
+}
+
+.description div:nth-child(3) {
+    width: 70%;
+}
+
+
+/* --------------------------------
+   Variant
+-------------------------------- */
+
+.variant {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 15px;
+
+    width: 90%;
+
+    gap: 8px;
+}
+
+.label {
+    width: 70px;
+    height: 15px;
+
+    border-radius: 3px;
+}
+
+.select {
+    width: 100%;
+    height: 44px;
+
+    border-radius: 8px;
+}
+
+
+/* --------------------------------
+   Quantity + Cart
+-------------------------------- */
+
+.quantity-cart {
+    display: flex;
+    justify-content: space-between;
+
+    width: 90%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.75rem;
+}
+
+.quantityLabel {
+    width: 65px;
+    height: 14px;
+
+    border-radius: 3px;
+}
+
+
+/* --------------------------------
+   Quantity Selector
+-------------------------------- */
+
+.quantity {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 120%;
+    height: 40px;
+
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+
+    background: #fff;
+
+    overflow: hidden;
+}
+
+.quantity div {
+    width: 40px;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        #e8e8e8 25%,
+        #f5f5f5 50%,
+        #e8e8e8 75%
+    );
+
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.quantity div:nth-child(2) {
+    width: 20px;
+    height: 14px;
+
+    border-radius: 3px;
+}
+
+
+/* --------------------------------
+   Add To Cart
+-------------------------------- */
+
+.add-to-cart {
+    display: flex;
+
+    margin-top: auto;
+    margin-bottom: 0;
+
+    gap: 25px;
+
+    height: 45px;
+    width: 60%;
+
+    border-radius: 2px;
+}
+
+
+/* =================================
+   MEDIA QUERIES
+================================= */
+
+
+/* --------------------------------
+   Mobile
+   max-width: 650px
+-------------------------------- */
+
+@media screen and (max-width: 650px) {
+
+    .product-section {
+        flex-direction: column;
+        margin-top: 80px;
+    }
+
+    .image-section {
+        width: 100%;
+    }
+
+    .gallery {
+        width: 100%;
+    }
+
+    .product-infomation {
+        width: 100%;
+        padding-top: 50px;
+    }
+
+    .info {
+        width: 85%;
+    }
+
+    .title {
+        width: 100%;
+    }
+
+    .price-review {
+        width: 100%;
+    }
+
+    .description {
+        width: 100%;
+    }
+
+    .variant {
+        width: 100%;
+    }
+
+    .quantity-cart {
+        width: 100%;
+    }
+
+    .thumbnails {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .thumbnail {
+        width: 60px;
+    }
+
+    .add-to-cart {
+        width: 60%;
+    }
+}
+
+
+/* --------------------------------
+   Tablet
+   601px - 1080px
+-------------------------------- */
+
+@media screen and (min-width: 601px) and (max-width: 1080px) {
+
+    .product-section {
+        flex-direction: column;
+        margin-top: 80px;
+    }
+
+    .image-section {
+        width: 100%;
+    }
+
+    .gallery {
+        width: 90%;
+    }
+
+    .product-infomation {
+        width: 100%;
+        padding-top: 50px;
+    }
+
+    .info {
+        width: 85%;
+    }
+
+    .title {
+        width: 100%;
+    }
+
+    .price-review {
+        width: 100%;
+    }
+
+    .description {
+        width: 100%;
+    }
+
+    .variant {
+        width: 100%;
+    }
+
+    .quantity-cart {
+        width: 100%;
+    }
+}
+
+
+/* --------------------------------
+   1080px - 1400px
+-------------------------------- */
+
+@media screen and (min-width: 1080px) and (max-width: 1400px) {
+
+    .product-section {
+        margin-top: 15px;
+    }
+
+    .gallery {
+        margin-top: 75px;
+    }
+
+    .product-infomation {
+        margin-top: 90px;
+    }
+
+    .info {
+        width: 90%;
+    }
+}
+
+
+/* --------------------------------
+   Large Desktop
+   1400px+
+-------------------------------- */
+
+@media screen and (min-width: 1400px) {
+
+    .gallery {
+        margin: 25px 10% auto auto;
+    }
+
+    .product-infomation {
+        margin-top: 50px;
+    }
+
+    .info {
+        width: 75%;
+        margin-right: auto;
+        margin-left: 5%;
+    }
+}

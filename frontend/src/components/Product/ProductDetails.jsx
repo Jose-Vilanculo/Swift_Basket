@@ -8,6 +8,7 @@ import { formatPrice } from '../../services/formatPrice';
 import { addToCart } from '../../services/guest_cart';
 import classes from './ProductDetails.module.css';
 import API_URL from '../../services/api';
+import { ProductDetailsSkeleton } from '../Skeletons/Products/ProductDetailsSkeleton';
 
 
 export const ProductDetails = (props) => {
@@ -82,7 +83,7 @@ export const ProductDetails = (props) => {
 
 
     if (!product) {
-        return <div>Loading...</div>;
+        return <ProductDetailsSkeleton />
     };
 
 

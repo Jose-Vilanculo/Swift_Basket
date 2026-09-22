@@ -7,11 +7,12 @@ import { AiFillFilePdf } from 'react-icons/ai';
 import { formatPrice } from '../../services/formatPrice';
 import noOrdersImage from '../../assets/no-orders.jpg'
 import API_URL from '../../services/api';
+import { OrdersSectionSkeleton } from '../Skeletons/Orders/OrdersSectionSkeleton';
 
 
 export const OrdersSection = () => {
 
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState(null);
     const [showMore, setShowMore] = useState(null);
 
     useEffect(() => {
@@ -82,6 +83,10 @@ export const OrdersSection = () => {
             console.error(error);
         }
     };
+
+    if (orders === null) {
+        return <OrdersSectionSkeleton />
+    }
 
 
     if (orders.length === 0) {

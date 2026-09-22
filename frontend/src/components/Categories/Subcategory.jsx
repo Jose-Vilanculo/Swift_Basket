@@ -3,12 +3,13 @@ import classes from './Subcategory.module.css'
 import axios from 'axios'
 import { IoIosArrowForward } from 'react-icons/io'
 import API_URL from '../../services/api'
+import { SubCategorySkeleton } from '../Skeletons/Categories/SubCategorySkeleton'
 
 
 export const Subcategory = (props) => {
 
     const category = props.category
-
+    const [loading, setLoading] = useState(true);
     const [subcategory, setSubcategory] = useState([]);
 
      // Use effect to get subcategories
@@ -20,6 +21,7 @@ export const Subcategory = (props) => {
                 );
 
                 setSubcategory(response.data.results[0].subcategories);
+                setLoading(false);
             } catch (error) {
                 console.error(error);
             }
@@ -43,22 +45,31 @@ export const Subcategory = (props) => {
                 }
             >
                 <div className={classes.container}>
-                    {subcategory.map((category, key) => (
-                        <a
-                            className={classes.cards}
-                            href={`/products/${category.slug}`}
-                            key={key}
-                        >
-                            <img src={category.icon} alt="category icons" />
-                            <div className={classes.text}>
-                                <h4>{category.name}</h4>
-                                <div className={classes.discover}>
-                                <p>Discover</p>
-                                <IoIosArrowForward size={15} className={classes.arrow}/>
-                                </div>
-                            </div>
-                        </a>
-                    ))}
+                    {loading
+                    ? (
+                        <SubCategorySkeleton />
+                    ): (
+                        <>
+                            {subcategory.map((category, key) => (
+                                <a
+                                    className={classes.cards}
+                                    href={`/products/${category.slug}`}
+                                    key={key}
+                                >
+                                    <img src={category.icon} alt="category icons" />
+                                    <div className={classes.text}>
+                                        <h4>{category.name}</h4>
+                                        <div className={classes.discover}>
+                                        <p>Discover</p>
+                                        <IoIosArrowForward size={15} className={classes.arrow}/>
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                        </>
+                    )
+                    }
+                    
                 </div>
 
             </section>
