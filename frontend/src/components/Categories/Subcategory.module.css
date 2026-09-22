@@ -80,7 +80,6 @@
 
 /* ----- Media Queries ----- */
 
-/* desktop navbar on smaller screens */
 @media screen and (max-width: 600px) {
     .sub-category-section {
         display: none;

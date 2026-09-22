@@ -43,7 +43,14 @@
     margin: 0;
 }
 
-/* desktop navbar on smaller screens */
+
+/* ----- Media Queries ----- */
+
+@media screen and (max-width: 600px) {
+    .sub-category-section {
+        display: none;
+    }
+}
 
 @media screen and (min-width: 601px) and (max-width: 950px) {
     .container {
@@ -65,6 +72,9 @@
     }
 
     .cards {
+        height: 120px;
+    }
+    .container {
         height: 120px;
     }
 }
