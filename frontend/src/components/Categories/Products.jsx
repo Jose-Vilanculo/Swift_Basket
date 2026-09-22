@@ -8,6 +8,7 @@ import { formatPrice } from '../../services/formatPrice';
 import { addGuestCartItem } from '../../services/guest_cart';
 import classes from './Products.module.css';
 import API_URL from "../../services/api";
+import { ProductsSkeleton } from "../Skeletons/Categories/ProductsSkeleton";
 
 
 export const Products = (props) => {
@@ -19,6 +20,7 @@ export const Products = (props) => {
     const openCart = props.openCart;
     const fetchCartItems = props.fetchCartItems;
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [currentCategory, setCurrentCategory] = useState("");
     const authenticated = props.authenticated
     const navigate = useNavigate();
@@ -38,6 +40,7 @@ export const Products = (props) => {
                 setProducts(response.data.results);
                 setTotalPages(Math.ceil(response.data.count / 12));
                 setProductCount(response.data.count);
+                setLoading(false);
             } catch (error) {
                 console.error(error);
             }
@@ -173,63 +176,73 @@ export const Products = (props) => {
                 <h2>All {currentCategory} ({productCount} results)</h2>
             </div>
             <div className={classes.container}>
-                    {products.map((product) => (
-                        <div
-                            key={product.product_id}
-                            className={classes["product-cards"]}
-                        >
-                            <div className={classes["image-container"]}>
-                                <img
-                                    src={product.main_image.image}
-                                    alt={product.product_name}
-                                    onClick={() => navigate(`/product/${product.slug}`)}
-                                />
-                            </div>
+                {
+                    loading ? (
+                        <ProductsSkeleton />
+                    ) : (
+                        <>
+                            {products.map((product) => (
+                                <div
+                                    key={product.product_id}
+                                    className={classes["product-cards"]}
+                                >
+                                    <div className={classes["image-container"]}>
+                                        <img
+                                            src={product.main_image.image}
+                                            alt={product.product_name}
+                                            onClick={() => navigate(`/product/${product.slug}`)}
+                                        />
+                                    </div>
 
-                            <h4>{product.product_name}</h4>
+                                    <h4>{product.product_name}</h4>
 
-                            {product.average_rating > 0 && (
-                                <div className={classes.rating}>
-                                    {[1, 2, 3, 4, 5].map((star) =>
-                                        star <= product.average_rating ? (
-                                            <HiMiniStar key={star} />
-                                        ) : (
-                                            <HiOutlineStar key={star} color={"gray"}/>
-                                        )
+                                    {product.average_rating > 0 && (
+                                        <div className={classes.rating}>
+                                            {[1, 2, 3, 4, 5].map((star) =>
+                                                star <= product.average_rating ? (
+                                                    <HiMiniStar key={star} />
+                                                ) : (
+                                                    <HiOutlineStar key={star} color={"gray"}/>
+                                                )
+                                            )}
+                                        </div>
                                     )}
-                                </div>
-                            )}
 
-                            {product.average_rating == 0 && (
-                                <div className={classes["no-rating"]}>
-                                    {[1, 2, 3, 4, 5].map((star) => (                                      
-                                            <HiOutlineStar key={star} />
-                                        )
+                                    {product.average_rating == 0 && (
+                                        <div className={classes["no-rating"]}>
+                                            {[1, 2, 3, 4, 5].map((star) => (                                      
+                                                    <HiOutlineStar key={star} />
+                                                )
+                                            )}
+                                            <p>no reviews</p>
+                                        </div>
                                     )}
-                                    <p>no reviews</p>
-                                </div>
-                            )}
 
-                            <div className={classes.bottom}>
-                                <p>R {formatPrice(product.price)}</p>
-                                
-                                <div className={classes.buttons}>
-                                    <a
-                                        className={classes["view-item"]}
-                                        onClick={() => navigate(`/product/${product.slug}`)}
-                                    >
-                                        View Product
-                                    </a>
-                                    <button
-                                        className={classes["add-item"]}
-                                        onClick={() => handleAddItem(product)}
-                                    >
-                                        <LiaCartPlusSolid size={25} className={classes["cart-item"]} />
-                                    </button>
+                                    <div className={classes.bottom}>
+                                        <p>R {formatPrice(product.price)}</p>
+                                        
+                                        <div className={classes.buttons}>
+                                            <a
+                                                className={classes["view-item"]}
+                                                onClick={() => navigate(`/product/${product.slug}`)}
+                                            >
+                                                View Product
+                                            </a>
+                                            <button
+                                                className={classes["add-item"]}
+                                                onClick={() => handleAddItem(product)}
+                                            >
+                                                <LiaCartPlusSolid size={25} className={classes["cart-item"]} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    ))}
+                            ))}
+                        </>
+                    )
+                }
+                
+                    
             </div>
 
             {/* page pagination */}

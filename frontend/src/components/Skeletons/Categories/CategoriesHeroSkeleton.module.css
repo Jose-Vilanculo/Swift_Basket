@@ -1,0 +1,63 @@
+.skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    line-height: 3.6rem;
+}
+
+.name {
+    height: calc(3.6rem * 0.75);
+    width: 500px;
+    font-size: 3.6rem;
+    margin-left: 100px;
+    animation-delay: 0.2s;
+    text-transform: uppercase;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+.line {
+    height: calc(0.4rem);
+    width: 400px;
+    margin-left: 100px;
+    line-height: 1;
+    padding-bottom: 10px;
+}
+
+
+.button {
+    height: 30px;
+    width: 120px;
+    margin-left: 100px;
+    border: 1px solid white;
+    border-radius: 0;
+    line-height: 15px;
+}
+
+
+/* ----- Media Queries ----- */
+
+@media screen and (max-width: 700px) {
+  .skeleton {
+    width: calc(100% - 40px);
+    margin-right: 20px;
+  }
+  .name {
+    width: calc(100% - 40px);
+    margin-left: 0;
+    font-size: 2.9rem;
+  }
+    .line {
+    margin-left: 0;
+    max-width: 100%;
+  }
+    .button {
+    margin-left: 0;
+    font-size: 1rem;
+  }
+
+}

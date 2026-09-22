@@ -168,12 +168,14 @@
     z-index: 10;
     margin: auto;
 
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border-radius: 25px;
     border: none;
 
     cursor: pointer;
+
+    background-color: white;
 }
 
 .prev {
@@ -182,6 +184,11 @@
 
 .next {
     right: -60px;
+}
+
+.arrow {
+    height: 30px;
+    width: 30px;
 }
 
 
@@ -209,6 +216,8 @@
     .next {
         position: absolute;
         z-index: 10;
+        height: 30px;
+        width: 30px;
     }
     .prev {
         left: -10px;
@@ -216,6 +225,10 @@
 
     .next {
         right: -10px;
+    }
+    .arrow {
+        height: 20px;
+        width: 20px;
     }
 }
 
