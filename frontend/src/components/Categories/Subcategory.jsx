@@ -30,6 +30,11 @@ export const Subcategory = (props) => {
         fetchSubCategories();
     }, [category]);
 
+
+    if (loading) {
+        return <SubCategorySkeleton />
+    }
+
     return (
         <>
         
@@ -45,30 +50,23 @@ export const Subcategory = (props) => {
                 }
             >
                 <div className={classes.container}>
-                    {loading
-                    ? (
-                        <SubCategorySkeleton />
-                    ): (
-                        <>
-                            {subcategory.map((category, key) => (
-                                <a
-                                    className={classes.cards}
-                                    href={`/products/${category.slug}`}
-                                    key={key}
-                                >
-                                    <img src={category.icon} alt="category icons" />
-                                    <div className={classes.text}>
-                                        <h4>{category.name}</h4>
-                                        <div className={classes.discover}>
-                                        <p>Discover</p>
-                                        <IoIosArrowForward size={15} className={classes.arrow}/>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </>
-                    )
-                    }
+                    
+                    {subcategory.map((category, key) => (
+                        <a
+                            className={classes.cards}
+                            href={`/products/${category.slug}`}
+                            key={key}
+                        >
+                            <img src={category.icon} alt="category icons" />
+                            <div className={classes.text}>
+                                <h4>{category.name}</h4>
+                                <div className={classes.discover}>
+                                <p>Discover</p>
+                                <IoIosArrowForward size={15} className={classes.arrow}/>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
                     
                 </div>
 
